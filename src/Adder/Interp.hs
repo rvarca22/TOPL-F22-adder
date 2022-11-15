@@ -7,7 +7,10 @@
  -}
 module Adder.Interp
   ( interpWith,
-    interp,
+    interpFile,
+    interpInteractive,
+    parseFile,
+    parseInteractive,
   )
 where
 
@@ -16,50 +19,46 @@ import Adder.DataStructures (DenVal, Environment, ExpVal (..), Procedure (..))
 -- import Adder.TypeEnv (TEnv (..), TypeEnvironment)
 import Adder.Defs (Source)
 import Adder.Environment (Env (..))
-import Adder.Lang.Parser (ParseError, parseToplevel)
+import Adder.Lang.Parser (ParseError, parseFile, parseInteractive)
 import Adder.Lang.Syntax (Expression (..), Program (..), Statement (..))
 import Adder.Store (Store, deref, emptyStore, newref, setref)
 import Data.Either (fromRight)
 import Prelude hiding (exp)
 
-{- Evaluating a program yields an "answer" - a value and a resulting state. -}
-data Answer = Answer {getVal :: ExpVal, getStore :: Store}
+type Interpreter a = a -> Environment -> Store -> IO Store
 
 {- top-level interpreter routines -}
--- TODO Come back to this after we've discussed typed languages
 
--- checkAndInterp :: Source -> Either ParseError (IO Store)
--- checkAndInterp = checkAndInterpWith emptyTenv emptyEnv emptyStore
+interpFile :: Source -> Either ParseError (IO Store)
+interpFile src = interpWith resultOfProgram <$> parseFile src
 
--- checkAndInterpWith :: TypeEnvironment -> Environment -> Store -> Source -> Either ParseError (IO Store)
--- checkAndInterpWith τ ρ σ src = flip (`resultOfProgram` ρ) σ <$> checkWith τ src
+-- interpInteractive :: Source -> Either ParseError (IO Store)
+interpInteractive :: Source -> Either ParseError (IO Store)
+interpInteractive src = interpWith resultOf <$> parseInteractive src
 
-interp :: Source -> Either ParseError (IO Store)
-interp = interpWith emptyEnv emptyStore
-
-interpWith' :: Environment -> Store -> Source -> IO Store
-interpWith' ρ σ = fromRight undefined . interpWith ρ σ
-
-interpWith :: Environment -> Store -> Source -> Either ParseError (IO Store)
-interpWith ρ σ src = flip (`resultOfProgram` ρ) σ <$> parseToplevel src
+interpWith :: Interpreter a -> a -> IO Store
+interpWith f x = f x emptyEnv emptyStore
 
 {- semantic reduction of a program -}
 -- TODO Implement the semantics for an Adder program
 
 resultOfProgram :: Program -> Environment -> Store -> IO Store
-resultOfProgram (Pgm) ρ σ = undefined
+resultOfProgram _ env st0 = undefined
 
 {- semantic reductions for statements -}
 -- TODO Implement the semantics for each kind of Adder statement
 
 resultOf :: Statement -> Environment -> Store -> IO Store
-resultOf (Stmt) ρ σ = undefined
+resultOf _ env st0 = undefined
+
+{- Evaluating a program yields an "answer" - a value and a resulting state. -}
+type Answer = (ExpVal, Store)
 
 {- semantic reductions for expressions -}
--- TODO Implement the semantics for each kind of Adder expression
 
+-- TODO Implement the semantics for each kind of Adder expression
 valueOf :: Expression -> Environment -> Store -> Answer
-valueOf (Exp) ρ σ = undefined
+valueOf _ env st0 = undefined
 
 {- Auxiliary functions -}
 -- TODO Implement any helper functions needed to simplify the design of the

@@ -10,16 +10,48 @@ module Adder.Lang.Syntax where
 import Adder.Defs (Identifier)
 
 -- TODO Build out the top-level abstract syntax for an Adder program
-data Program
-  = Pgm
-  deriving (Eq, Ord, Show)
+newtype Program
+  = Pgm [Statement]
+  deriving (Show)
 
 -- TODO Build out the abstract syntax for Adder statements
 data Statement
-  = Stmt
-  deriving (Eq, Ord, Show)
+  = NoStmt -- TODO Remove this after adding legit data constructors
+  deriving (Show)
 
--- TODO Build out the abstract syntax for Adder expressions
+-- TODO Build out the abstract syntax for Adder by adding more expressions
 data Expression
-  = Exp
-  deriving (Eq, Ord, Show)
+  = UnaryExpr UnaryOp Expression
+  | BinaryExpr BinaryOp Expression Expression
+  deriving (Show)
+
+data UnaryOp
+  = Not
+  | Negative
+  deriving (Show)
+
+-- TODO Build out the abstract syntax for more binary operations
+data BinaryOp
+  = Plus
+  | Times
+  | Power
+  | Equal
+  | Less
+  | And
+  | Is
+  deriving (Show)
+
+-- TODO Define more expressed values for the Adder language
+data ExpVal
+  = BoolVal Bool
+  | IntVal Integer
+  | FloatVal Float
+  | StrVal String
+  deriving (Eq)
+
+-- TODO Implement "to-string" functionality for new Adder expressed values
+instance Show ExpVal where
+  show (BoolVal p) = show p
+  show (IntVal p) = show p
+  show (FloatVal p) = show p
+  show (StrVal p) = show p

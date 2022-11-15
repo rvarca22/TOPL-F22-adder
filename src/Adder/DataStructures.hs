@@ -17,22 +17,13 @@ module Adder.DataStructures
 where
 
 import Adder.Defs (Identifier, Reference)
-import Adder.Lang.Syntax (Expression)
+import Adder.Lang.Syntax (ExpVal, Expression)
 
 -- Storable values are any expressed value
 type StoVal = ExpVal
 
 -- Denoted values are any expressed value
 type DenVal = Reference
-
--- TODO Define the expressed values for the Adder language
-data ExpVal
-  = ExpVal
-  deriving (Eq)
-
--- TODO Implement "to-string" functionality for Adder expressed values
-instance Show ExpVal where
-  show ExpVal = undefined
 
 {- Recursive "data structure" representation for environments -}
 
@@ -57,4 +48,4 @@ envToList (Environment x v savedEnv) = (x, v) : envToList savedEnv
 data Procedure
   = ClosedProcedure {procVar :: Identifier, procBody :: Expression, procEnv :: Environment}
   | UnclosedProcedure {procVar :: Identifier, procBody :: Expression}
-  deriving (Eq, Show)
+  deriving (Show)

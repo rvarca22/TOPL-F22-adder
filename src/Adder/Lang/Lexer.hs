@@ -7,53 +7,84 @@
  -}
 module Adder.Lang.Lexer where
 
-import Text.Parsec ((<|>))
-import Text.Parsec.Char (alphaNum, letter, oneOf)
-import Text.Parsec.Language (emptyDef)
-import Text.Parsec.String (Parser)
+import Data.Functor.Identity (Identity)
+import Text.Parsec (alphaNum, char, letter, oneOf, spaces, (<|>))
+import Text.Parsec.Indent (IndentParser, IndentT)
+import Text.Parsec.Token (GenLanguageDef (LanguageDef))
 import qualified Text.Parsec.Token as Tok
 
-adderLexer :: Tok.TokenParser ()
+type IParser a = IndentParser String () a
+
+adderLexer :: Tok.GenTokenParser String u (IndentT Identity)
 adderLexer =
   Tok.makeTokenParser adderLexSpec
 
+adderLexSpec :: Tok.GenLanguageDef String u (IndentT Identity)
 adderLexSpec =
-  emptyDef
-    { Tok.commentLine = "#",
-      Tok.identStart = letter,
+  LanguageDef
+    { Tok.caseSensitive = True,
+      Tok.nestedComments = False,
+      Tok.commentStart = "",
+      Tok.commentEnd = "",
+      -- See https://docs.python.org/3/reference/lexical_analysis.html#comments
+      Tok.commentLine = "#",
+      -- See https://docs.python.org/3/reference/lexical_analysis.html#identifiers
+      Tok.identStart = letter <|> char '_',
       Tok.identLetter = alphaNum <|> oneOf "_",
-      -- TODO Define the reserved operator symbols for the Adder language
-      Tok.reservedOpNames = [],
       -- TODO Define the reserved names/keywords for the Adder language
-      Tok.reservedNames = []
+      -- See https://docs.python.org/3/reference/lexical_analysis.html#keywords
+      Tok.reservedNames =
+        [],
+      -- TODO Define the reserved operator symbols for the Adder language
+      -- See https://docs.python.org/3/reference/lexical_analysis.html#operators
+      Tok.opStart = Tok.opLetter adderLexSpec,
+      Tok.opLetter = oneOf "+-*/%@<>&|^~:=!.",
+      Tok.reservedOpNames =
+        []
     }
 
-integer :: Parser Integer
+boolean :: IParser Bool
+boolean = trueLiteral <|> falseLiteral
+  where
+    trueLiteral = reserved "True" >> return True
+    falseLiteral = reserved "False" >> return False
+
+-- integer :: Parser Integer
+integer :: IParser Integer
 integer = Tok.integer adderLexer
 
-symbol :: String -> Parser String
+float :: IParser Float
+float = realToFrac <$> Tok.float adderLexer
+
+string :: IParser String
+string = Tok.stringLiteral adderLexer
+
+symbol :: String -> IParser String
 symbol = Tok.symbol adderLexer
 
-parens :: Parser a -> Parser a
+parens :: IParser a -> IParser a
 parens = Tok.parens adderLexer
 
-brackets :: Parser a -> Parser a
+brackets :: IParser a -> IParser a
 brackets = Tok.brackets adderLexer
 
-commaSep :: Parser a -> Parser [a]
+commaSep :: IParser a -> IParser [a]
 commaSep = Tok.commaSep adderLexer
 
-identifier :: Parser String
-identifier = Tok.identifier adderLexer
+semiSep1 :: IParser a -> IParser [a]
+semiSep1 = Tok.semiSep1 adderLexer
 
-reserved :: String -> Parser ()
+identifier :: IParser String
+identifier = do
+  s <- Tok.identifier adderLexer
+  spaces
+  return s
+
+reserved :: String -> IParser ()
 reserved = Tok.reserved adderLexer
 
-reservedOp :: String -> Parser ()
+reservedOp :: String -> IParser ()
 reservedOp = Tok.reservedOp adderLexer
 
-whiteSpace :: Parser ()
+whiteSpace :: IParser ()
 whiteSpace = Tok.whiteSpace adderLexer
-
-stringLiteral :: Parser String
-stringLiteral = Tok.stringLiteral adderLexer

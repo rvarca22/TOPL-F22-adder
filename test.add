@@ -1,0 +1,16 @@
+n = 5
+computation = "area"
+
+def circumference(r):
+  c = 3.14 * 2 * r
+  return c
+
+def area_of_circle(r):
+  a = 3.14 * r**2
+  return a
+
+
+if computation == "area":
+  print(area_of_circle(n))
+else:
+  print(circumference(n))
