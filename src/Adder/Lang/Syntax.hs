@@ -49,9 +49,15 @@ data ExpVal
   | StrVal String
   deriving (Eq)
 
+data AtomExp
+  = identifier Identifier
+  | literal Literal
+  | enclosure Enclosure
+
 -- TODO Implement "to-string" functionality for new Adder expressed values
 instance Show ExpVal where
   show (BoolVal p) = show p
   show (IntVal p) = show p
   show (FloatVal p) = show p
   show (StrVal p) = show p
+
