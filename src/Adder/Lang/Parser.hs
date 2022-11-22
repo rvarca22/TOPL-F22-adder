@@ -49,7 +49,12 @@ program = Pgm <$> statement
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-statement
 statement :: IParser Statement
-statement = simpleStmt -- [compoundStmt, simpleStmt] statement can be both a compoundStmt or simpleStmt
+statement = 
+  (choice . map try)
+    [
+      compoundStmt, 
+      simpleStmt
+    ]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-suite
 suite :: IParser [Statement]
@@ -65,8 +70,8 @@ compoundStmt =
 simpleStmt :: IParser Statement
 simpleStmt =
   (choice . map try)
-    [ PassStmt
-       <$> (reserved "pass") -- pass dose not take in any identifier, expression, statement, etc..
+    [ 
+      (reserved "pass" >> return PassStmt) -- pass_stmt ::=  "pass"
     ]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-stmt_list
