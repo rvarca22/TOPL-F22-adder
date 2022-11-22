@@ -75,21 +75,38 @@ stmtList = undefined
 -- See https://docs.python.org/3/reference/expressions.html#operator-precedence
 table :: [[Operator String () (IndentT Identity) Expression]]
 table =
-  [ [Prefix (reservedOp "-" >> return (UnaryExpr Negative))],
-    [Infix (reservedOp "**" >> return (BinaryExpr Power)) AssocRight],
-    [ Infix (reservedOp "*" >> return (BinaryExpr Times)) AssocLeft
-    ],
-    [ Infix (reservedOp "+" >> return (BinaryExpr Plus)) AssocLeft
-    ],
-    [ Infix (reservedOp "<" >> return (BinaryExpr Less)) AssocLeft
-    ],
-    [ Infix (reservedOp "==" >> return (BinaryExpr Equal)) AssocLeft
-    ],
-    [ Infix (reserved "is" >> return (BinaryExpr Is)) AssocLeft
-    ],
-    [Prefix (reserved "not" >> return (UnaryExpr Not))],
-    [Infix (reserved "and" >> return (BinaryExpr And)) AssocLeft]
-  ]
+[ [Infix (reservedOp "+" >> return (BinaryExpr Plus)) AssocLeft],
+-- addition - string
+[Prefix (reservedOp "-" >> return (UnaryExpr Negative))],
+-- addition string
+[Infix (reservedOp "*" >> return (BinaryExpr Times)) AssocLeft],
+-- division - float point
+-- division - integer quitient
+-- remainder
+[Infix (reservedOp "**" >> return (BinaryExpr Power)) AssocRight],
+[Infix (reservedOp "==" >> return (BinaryExpr Equal)) AssocLeft],
+-- not equals
+[Infix (reservedOp "!=" >> return (BinaryExpr NotEqual)) AssocLeft],
+-- less
+[Infix (reservedOp "<" >> return (BinaryExpr Less)) AssocLeft],
+-- greater
+[Infix (reservedOp ">" >> return (BinaryExpr Greater)) AssocLeft],
+-- less or equal
+[Infix (reservedOp "<=" >> return (BinaryExpr LessEq)) AssocLeft],
+-- greater or equal
+[Infix (reservedOp ">=" >> return (BinaryExpr GreaterEq)) AssocLeft],
+-- and
+[Infix (reserved "and" >> return (BinaryExpr And)) AssocLeft].
+-- or
+[Infix (reserved "is" >> return (BinaryExpr Is)) AssocLeft],
+-- not
+[Prefix (reserved "not" >> return (UnaryExpr Not))]
+
+-- negate - integer
+[Prefix (reserved "!" >> return (UnaryExpr Negate))]
+-- break
+[Prefix (reserved "break" >> return Statement BreakStmt)]
+]
 
 -- See https://docs.python.org/3/reference/expressions.html
 expression :: IParser Expression

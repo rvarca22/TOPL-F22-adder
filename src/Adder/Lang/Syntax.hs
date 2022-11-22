@@ -17,17 +17,28 @@ newtype Program
 -- TODO Build out the abstract syntax for Adder statements
 data Statement
   = NoStmt -- TODO Remove this after adding legit data constructors
+  | BreakStmt
   deriving (Show)
 
 -- TODO Build out the abstract syntax for Adder by adding more expressions
 data Expression
   = UnaryExpr UnaryOp Expression
   | BinaryExpr BinaryOp Expression Expression
+  | BreakExpr ForExpr Expression
   deriving (Show)
+
+
 
 data UnaryOp
   = Not
   | Negative
+  | IsNeg
+  | IsPos
+  | IsNull
+  | Negate
+  | Break
+
+
   deriving (Show)
 
 -- TODO Build out the abstract syntax for more binary operations
@@ -36,9 +47,14 @@ data BinaryOp
   | Times
   | Power
   | Equal
+  | NotEqual
   | Less
+  | Greater
+  | LessEq
+  | GreaterEq
   | And
   | Is
+  | Mod
   deriving (Show)
 
 -- TODO Define more expressed values for the Adder language

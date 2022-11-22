@@ -40,7 +40,7 @@ adderLexSpec =
       Tok.opStart = Tok.opLetter adderLexSpec,
       Tok.opLetter = oneOf "+-*/%@<>&|^~:=!.",
       Tok.reservedOpNames =
-        []
+        ["Not", "Negative", "IsNeg", "IsPos", "IsNull", "Negate", "Greater", "LessEq", "GreaterEq", "And", "Is", "Negate", "Break"]
     }
 
 boolean :: IParser Bool
