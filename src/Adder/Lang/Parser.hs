@@ -49,11 +49,7 @@ program = Pgm <$> statement
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-statement
 statement :: IParser Statement
-statement = [
-    compound_stmt, 
-    simple_stmt,
-    assignStmt
-  ]
+statement = compoundStmt
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-suite
 suite :: IParser [Statement]
@@ -63,9 +59,10 @@ suite = undefined
 compoundStmt :: IParser Statement
 compoundStmt =
   (choice . map try)
-    [ if_stmt 
-        <$> (reserved "if" >> assignment_expression) 
-        <*> (reserved ":"  >> suite)
+   -- if_stmt ::=  "if" assignment_expression ":" suite   - If statement only 
+    [ IfStmt 
+        <$> (reserved "if" >> assignmentExpr) 
+        <*> (opLetter ":"  >> suite)
 
     ]
 
@@ -79,11 +76,7 @@ simpleStmt =
 stmtList :: IParser Statement
 stmtList = undefined
 
-assignStmt :: IParset Statement
-assignmentStmt = 
-    (choice . map try) 
-      [<$> identifier
-        <*> (reservedOp "=" >> expression)]
+
         
 
 -- See https://docs.python.org/3/reference/expressions.html#operator-precedence
@@ -108,6 +101,13 @@ table =
 -- See https://docs.python.org/3/reference/expressions.html
 expression :: IParser Expression
 expression = buildExpressionParser table atom <?> "expression"
+
+--assignment_expression ::=  [identifier ":="] expression
+assignmentExpr :: IParser Expression
+assignmentExpr = expression --For now, assignment expression only needs to be an expression
+    --(choice . map try) 
+    --  [<$> identifier
+    --    <*> (reservedOp "=" >> Expression)]
 
 -- See https://docs.python.org/3/reference/expressions.html#grammar-token-python-grammar-atom
 atom :: IParser Expression

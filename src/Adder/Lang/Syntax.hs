@@ -16,7 +16,8 @@ newtype Program
 
 -- TODO Build out the abstract syntax for Adder statements
 data Statement
-  = NoStmt -- TODO Remove this after adding legit data constructors
+  = IfStmt  expression [statement]   -- If Statement contains Exprression and list of statements - at this time only one statement 
+  -- TODO Remove this after adding legit data constructors
   deriving (Show)
 
 -- TODO Build out the abstract syntax for Adder by adding more expressions
