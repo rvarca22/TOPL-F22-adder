@@ -37,6 +37,7 @@ data BinaryOp
   | Power
   | Equal
   | Less
+  | Concat
   | And
   | Is
   deriving (Show)
