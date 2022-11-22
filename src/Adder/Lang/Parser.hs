@@ -101,7 +101,10 @@ atom =
     <?> "atom"
 
 -- Implementation of modulo
+-- EBNF Rule: operator ::== "%"
+
 -- Implementation of integer division
+-- EBNF Rule: operator ::== "//"
 
 operator :: IParser BinaryOp
 operator = 
