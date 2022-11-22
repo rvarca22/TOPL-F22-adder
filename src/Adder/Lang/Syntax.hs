@@ -37,6 +37,9 @@ data BinaryOp
   | Power
   | Equal
   | Less
+  | Greater
+  | LessEqual
+  | GreatEqual
   | And
   | Is
   deriving (Show)
