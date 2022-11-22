@@ -99,3 +99,13 @@ atom :: IParser Expression
 atom =
   undefined
     <?> "atom"
+
+-- Implementation of modulo
+-- Implementation of integer division
+
+operator :: IParser BinaryOp
+operator = 
+  (choice . map try)
+  [ Mod <$ reservedOp "%",
+    IntDiv <$ reservedOp "//"
+  ]
