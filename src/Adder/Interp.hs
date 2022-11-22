@@ -63,3 +63,9 @@ valueOf _ env st0 = undefined
 {- Auxiliary functions -}
 -- TODO Implement any helper functions needed to simplify the design of the
 -- interpreter (e.g., the applyProcedure helper function).
+valueOf :: Return -> Environment -> Store -> Answer
+valueOf (Return) exp1 env store = env2
+Answer Return exp1 env = exp1         --Attempted to add the return statement 
+-- valueOf(Return exp1)env = env1 exp2
+---------------------------------------------
+-- valueOf(exp1)env = env1 exp2

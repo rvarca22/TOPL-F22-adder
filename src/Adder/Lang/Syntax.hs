@@ -16,7 +16,7 @@ newtype Program
 
 -- TODO Build out the abstract syntax for Adder statements
 data Statement
-  = NoStmt -- TODO Remove this after adding legit data constructors
+  =  Return Expression  -- I did this to return just an expression of any kind, so the user could use return for many purposes -- TODO Remove this after adding legit data constructors
   deriving (Show)
 
 -- TODO Build out the abstract syntax for Adder by adding more expressions
