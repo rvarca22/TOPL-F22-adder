@@ -82,6 +82,8 @@ table =
     ],
     [ Infix (reservedOp "<" >> return (BinaryExpr Less)) AssocLeft
     ],
+    [ Infix (reservedOp ">" >> return (BinaryExpr Great)) AssocLeft
+    ],
     [ Infix (reservedOp "==" >> return (BinaryExpr Equal)) AssocLeft
     ],
     [ Infix (reserved "is" >> return (BinaryExpr Is)) AssocLeft
