@@ -17,6 +17,7 @@ newtype Program
 -- TODO Build out the abstract syntax for Adder statements
 data Statement
   = NoStmt -- TODO Remove this after adding legit data constructors
+  | AssignmentStmt Identifier Expression
   deriving (Show)
 
 -- TODO Build out the abstract syntax for Adder by adding more expressions
