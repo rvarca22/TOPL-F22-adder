@@ -1,4 +1,4 @@
-{-
+{--
  -  Adder is a small but usable subset of the Python language. It is named
  -  for the Blackadder comedy series, much as the Python language is named
  -  for Monty Python.
@@ -47,6 +47,10 @@ data ExpVal
   | IntVal Integer
   | FloatVal Float
   | StrVal String
+  | AugPlus Integer
+  | AugMinus Integer
+  | AugMult Integer
+  | AugDiv Integer
   deriving (Eq)
 
 -- TODO Implement "to-string" functionality for new Adder expressed values

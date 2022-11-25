@@ -1,4 +1,4 @@
-{-
+{--
  -  Adder is a small but usable subset of the Python language. It is named
  -  for the Blackadder comedy series, much as the Python language is named
  -  for Monty Python.
@@ -39,10 +39,9 @@ adderLexSpec =
       -- See https://docs.python.org/3/reference/lexical_analysis.html#operators
       Tok.opStart = Tok.opLetter adderLexSpec,
       Tok.opLetter = oneOf "+-*/%@<>&|^~:=!.",
-      Tok.reservedOpNames =
-        []
+      Tok.reservedOpNames = ["+=", "-=", "*=", "/="] -- BASHIR'S ADDITION FOR AUGMENTED ASSIGNMENT
     }
-
+  
 boolean :: IParser Bool
 boolean = trueLiteral <|> falseLiteral
   where

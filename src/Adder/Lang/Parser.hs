@@ -1,4 +1,4 @@
-{-# LANGUAGE FlexibleContexts #-}
+{--# LANGUAGE FlexibleContexts #-}
 
 {-
  -  Adder is a small but usable subset of the Python language. It is named
