@@ -16,7 +16,7 @@ newtype Program
 
 -- TODO Build out the abstract syntax for Adder statements
 data Statement
-  = ContinueStmt Expression
+  = ContinueStmt
   deriving (Show)
 
 -- TODO Build out the abstract syntax for Adder by adding more expressions

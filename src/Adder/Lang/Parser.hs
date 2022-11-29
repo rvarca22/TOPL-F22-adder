@@ -64,10 +64,9 @@ compoundStmt =
 -- See https://docs.python.org/3/reference/simple_stmts.html#grammar-token-python-grammar-simple_stmt
 simpleStmt :: IParser Statement
 simpleStmt =
-  (choice . map try)
-    [ ContinueStmt
-        <$> (reserved "continue")
-        ]
+  (choice . map try) [ 
+      (reserved "continue" >> return ContinueStmt)  
+  ]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-stmt_list
 stmtList :: IParser Statement
