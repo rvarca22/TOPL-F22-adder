@@ -24,7 +24,6 @@ data Statement
 data Expression
   = UnaryExpr UnaryOp Expression
   | BinaryExpr BinaryOp Expression Expression
-  | BreakExpr ForExpr Expression
   deriving (Show)
 
 
@@ -32,11 +31,8 @@ data Expression
 data UnaryOp
   = Not
   | Negative
-  | IsNeg
-  | IsPos
-  | IsNull
-  | Negate
-  | Break
+
+
 
 
   deriving (Show)

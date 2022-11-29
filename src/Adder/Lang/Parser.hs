@@ -104,9 +104,7 @@ table =
 
 -- negate - integer
 [Prefix (reserved "!" >> return (UnaryExpr Negate))]
--- break
-[Prefix (reserved "break" >> return Statement BreakStmt)]
-]
+
 
 -- See https://docs.python.org/3/reference/expressions.html
 expression :: IParser Expression
