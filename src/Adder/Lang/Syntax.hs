@@ -41,6 +41,7 @@ data BinaryOp
   | Is
   | Mod
   | IntDiv
+  | Divide
   deriving (Show)
 
 -- TODO Define more expressed values for the Adder language

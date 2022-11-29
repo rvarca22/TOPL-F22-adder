@@ -71,12 +71,28 @@ simpleStmt =
 stmtList :: IParser Statement
 stmtList = undefined
 
+
+-- Implementation of modulo
+-- EBNF Rule: operator ::== "%"
+
+-- Implementation of integer division
+-- EBNF Rule: operator ::== "//"
+
+-- Implementation of division
+-- EBNF Rule: operator ::== "/"
+
 -- See https://docs.python.org/3/reference/expressions.html#operator-precedence
 table :: [[Operator String () (IndentT Identity) Expression]]
 table =
   [ [Prefix (reservedOp "-" >> return (UnaryExpr Negative))],
     [Infix (reservedOp "**" >> return (BinaryExpr Power)) AssocRight],
     [ Infix (reservedOp "*" >> return (BinaryExpr Times)) AssocLeft
+    ],
+    [ Infix (reservedOp "/" >> return (BinaryExpr Divide)) AssocLeft
+    ],
+    [ Infix (reservedOp "//" >> return (BinaryExpr IntDiv)) AssocLeft
+    ],
+    [ Infix (reservedOp "%" >> return (BinaryExpr Mod)) AssocLeft
     ],
     [ Infix (reservedOp "+" >> return (BinaryExpr Plus)) AssocLeft
     ],
@@ -100,15 +116,3 @@ atom =
   undefined
     <?> "atom"
 
--- Implementation of modulo
--- EBNF Rule: operator ::== "%"
-
--- Implementation of integer division
--- EBNF Rule: operator ::== "//"
-
-operator :: IParser BinaryOp
-operator = 
-  (choice . map try)
-  [ Mod <$ reservedOp "%",
-    IntDiv <$ reservedOp "//"
-  ]
