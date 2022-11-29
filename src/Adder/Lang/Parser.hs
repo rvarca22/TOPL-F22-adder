@@ -45,15 +45,13 @@ contents p = do
 
 -- See https://docs.python.org/3/reference/toplevel_components.html#complete-python-programs
 program :: IParser Program
-program = Pgm <$> statement
+program = undefined
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-statement
 statement :: IParser Statement
 statement = 
   (choice . map try)
     [
-      compoundStmt, 
-      simpleStmt
     ]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-suite
@@ -73,7 +71,7 @@ simpleStmt =
     [
       AssignmentStmt
         <$> identifier
-        <*> (reservedOp "=" *> expression)
+        <*> (reservedOp "=" >> expression)
     ]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-stmt_list
