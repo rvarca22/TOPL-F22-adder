@@ -90,6 +90,10 @@ table =
     [Infix (reserved "and" >> return (BinaryExpr And)) AssocLeft]
   ]
 
+atom :: IParser Expression
+atom =
+  atomExp
+
 -- See https://docs.python.org/3/reference/expressions.html
 expression :: IParser Expression
 -- expression = buildExpressionParser table atom <?> "expression"
