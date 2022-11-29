@@ -26,17 +26,20 @@ data Expression
   deriving (Show)
 
 data UnaryOp
-  = Not
-  | Negative
+  = Negative
+  | Positive
+  | Not
   deriving (Show)
 
 -- TODO Build out the abstract syntax for more binary operations
 data BinaryOp
   = Plus
+  | Minus
   | Times
   | Power
   | Equal
   | Less
+  | Great
   | And
   | Is
   deriving (Show)
