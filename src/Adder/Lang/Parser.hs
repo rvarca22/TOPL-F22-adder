@@ -18,7 +18,8 @@ import Adder.Lang.Lexer
 import Adder.Lang.Syntax
 import Control.Monad (liftM2)
 import Data.Functor.Identity (Identity)
-import Text.Parsec hiding (parse, string)
+import Text.Parsec hiding (parse, string, sepBy)
+--import Text.Parsec (ParseError, choice, eof, many, sepBy, try)
 import Text.Parsec.Expr
 import Text.Parsec.Indent
 
@@ -45,7 +46,11 @@ contents p = do
 
 -- See https://docs.python.org/3/reference/toplevel_components.html#complete-python-programs
 program :: IParser Program
-program = Pgm <$> statement
+program = Pgm <$> statement --help
+
+--block :: IParser a -> IParser [a]  ?????
+--block identifier :: IParser [String]
+--block integer :: IParser [Integer]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-statement
 statement :: IParser Statement
@@ -53,7 +58,7 @@ statement =
   (choice . map try)
     [
       compoundStmt, 
-      simpleStmt
+      stmtList
     ]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-suite
@@ -71,12 +76,17 @@ simpleStmt :: IParser Statement
 simpleStmt =
   (choice . map try)
     [ 
-      (reserved "pass" >> return PassStmt) -- pass_stmt ::=  "pass"
+      (reserved "pass" >> return PassStmt) -- pass_stmt ::= "pass"
     ]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-stmt_list
 stmtList :: IParser Statement
-stmtList = undefined
+stmtList = 
+  (choice . map try)
+    [ 
+      StmtList
+      <$> (sepBy simpleStmt (symbol ";")) -- keeps saying it does not know what sepBy is. tried adding the import but does not work
+    ]
 
 -- See https://docs.python.org/3/reference/expressions.html#operator-precedence
 table :: [[Operator String () (IndentT Identity) Expression]]
