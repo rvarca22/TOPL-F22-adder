@@ -42,7 +42,7 @@ data BinaryOp
   | Mod
   | IntDiv
   | Divide
-  deriving (Show)
+  deriving (Eq, Ord, Show)
 
 -- TODO Define more expressed values for the Adder language
 data ExpVal

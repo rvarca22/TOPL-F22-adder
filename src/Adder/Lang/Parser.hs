@@ -86,14 +86,10 @@ table :: [[Operator String () (IndentT Identity) Expression]]
 table =
   [ [Prefix (reservedOp "-" >> return (UnaryExpr Negative))],
     [Infix (reservedOp "**" >> return (BinaryExpr Power)) AssocRight],
-    [ Infix (reservedOp "*" >> return (BinaryExpr Times)) AssocLeft
-    ],
-    [ Infix (reservedOp "/" >> return (BinaryExpr Divide)) AssocLeft
-    ],
-    [ Infix (reservedOp "//" >> return (BinaryExpr IntDiv)) AssocLeft
-    ],
-    [ Infix (reservedOp "%" >> return (BinaryExpr Mod)) AssocLeft
-    ],
+    [ Infix (reservedOp "*" >> return (BinaryExpr Times)) AssocLeft,
+    Infix (reservedOp "/" >> return (BinaryExpr Divide)) AssocLeft,
+    Infix (reservedOp "//" >> return (BinaryExpr IntDiv)) AssocLeft,
+    Infix (reservedOp "%" >> return (BinaryExpr Mod)) AssocLeft],
     [ Infix (reservedOp "+" >> return (BinaryExpr Plus)) AssocLeft
     ],
     [ Infix (reservedOp "<" >> return (BinaryExpr Less)) AssocLeft
