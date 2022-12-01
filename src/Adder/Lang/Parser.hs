@@ -78,13 +78,16 @@ compoundStmt =
 simpleStmt :: IParser Statement
 simpleStmt =
   (choice . map try)
-    [
     [ (reserved "pass" >> return PassStmt), -- pass_stmt ::= "pass"
       ReturnStmt <$> (reserved "return" >> expression),  -- (reserved "return" >> [Expression]) -- Attempted to make it like the IsZero expression after feedback 
       -- Attempted EBNF rule return_stmt ::=  "return" [expression_list]
       AssignmentStmt
         <$> identifier
-        <*> (reservedOp "=" >> expression)
+        <*> (reservedOp "=" >> expression),
+      AugmentedAssignmentStmt
+        <$> identifier
+        <*> augAssStmt -- parse the augmented operator here
+        <*> expression -- then parse the expression
     ]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-stmt_list
@@ -148,3 +151,5 @@ atom :: IParser Expression
 atom =
   undefined
     <?> "atom"
+
+

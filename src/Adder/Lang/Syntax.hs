@@ -21,6 +21,7 @@ data Statement
   | PassStmt
   | StmtList [Statement]
   | AssignmentStmt Identifier Expression
+  | AugmentedAssignmentStmt Identifier AugOp Expression -- Bashir's Augmented Assignment constructor
   deriving (Show)
 
 -- TODO Build out the abstract syntax for Adder by adding more expressions
@@ -28,6 +29,14 @@ data Expression
   = UnaryExpr UnaryOp Expression
   | BinaryExpr BinaryOp Expression Expression
   deriving (Show)
+
+-- Bashir's Augment assignment operations
+data AugOp
+    = AugPlus
+    | AugMinus
+    | AugMulti
+    | AugDiv
+    deriving (Show)
 
 data UnaryOp
   = Not
