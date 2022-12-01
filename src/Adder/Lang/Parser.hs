@@ -91,24 +91,26 @@ table =
   ]
 
 atom :: IParser Expression
-atom =
-  (choice . map try)
-  [
-    -- atom  ::=  identifier | literal | enclosure
-    AtomExp <$> identifier
-    --AtomExp <$> literal,
-    --AtomExp <$> enclosure
-  ]
+atom = AtomExp <$> Id
+  -- (choice . map try)
+  -- [
+  --   -- atom  ::=  identifier | literal | enclosure
+  --   AtomExp <$> Id
+  --   --AtomExp <$> literal,
+  --   --AtomExp <$> enclosure
+  -- ]
 
 -- See https://docs.python.org/3/reference/expressions.html
 expression :: IParser Expression
--- expression = buildExpressionParser table atom <?> "expression"
+expression = buildExpressionParser table atom
+  <?> "expression"
+
 -- See https://docs.python.org/3/reference/expressions.html#grammar-token-python-grammar-atom
-expression = 
-  (choice . map try)
-  [
-    ExpVal <$> identifier
-  ]
+-- expression = 
+--   (choice . map try)
+--   [
+--     --ExpVal <$> identifier
+--   ]
   -- literal ::=  stringliteral | bytesliteral | integer | floatnumber | imagnumber
   -- Others should be handling something similar to this
 -- literal = 
