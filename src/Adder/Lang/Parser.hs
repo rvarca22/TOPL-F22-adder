@@ -66,7 +66,11 @@ compoundStmt =
 simpleStmt :: IParser Statement
 simpleStmt =
   (choice . map try)
-    []
+    [
+    BreakStmt -- finish me!
+
+
+    ]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-stmt_list
 stmtList :: IParser Statement
@@ -75,32 +79,47 @@ stmtList = undefined
 -- See https://docs.python.org/3/reference/expressions.html#operator-precedence
 table :: [[Operator String () (IndentT Identity) Expression]]
 table =
-[ [Infix (reservedOp "+" >> return (BinaryExpr Plus)) AssocLeft],
--- addition - string
-[Prefix (reservedOp "-" >> return (UnaryExpr Negative))],
--- addition string
+[
+[Infix (reservedOp "**" >> return (BinaryExpr Power)) AssocRight],
 [Infix (reservedOp "*" >> return (BinaryExpr Times)) AssocLeft],
+[
+    -- addition - string
+    Infix (reservedOp "+" >> return (BinaryExpr Plus)) AssocLeft,
+    -- subtraction - string
+    Prefix (reservedOp "-" >> return (UnaryExpr Negative))
+],
+-- addition string
+
 -- division - float point
 -- division - integer quitient
 -- remainder
-[Infix (reservedOp "**" >> return (BinaryExpr Power)) AssocRight],
+
 [Infix (reservedOp "==" >> return (BinaryExpr Equal)) AssocLeft],
 -- not equals
 [Infix (reservedOp "!=" >> return (BinaryExpr NotEqual)) AssocLeft],
--- less
-[Infix (reservedOp "<" >> return (BinaryExpr Less)) AssocLeft],
--- greater
-[Infix (reservedOp ">" >> return (BinaryExpr Greater)) AssocLeft],
--- less or equal
-[Infix (reservedOp "<=" >> return (BinaryExpr LessEq)) AssocLeft],
--- greater or equal
-[Infix (reservedOp ">=" >> return (BinaryExpr GreaterEq)) AssocLeft],
+
+[
+    -- less or equal
+    Infix (reservedOp "<=" >> return (BinaryExpr LessEq)) AssocLeft,
+    -- greater or equal
+    Infix (reservedOp ">=" >> return (BinaryExpr GreaterEq)) AssocLeft,
+    -- less
+    Infix (reservedOp "<" >> return (BinaryExpr Less)) AssocLeft],
+    -- greater
+    Infix (reservedOp ">" >> return (BinaryExpr Greater)) AssocLeft
+    Infix (reserved "is" >> return (BinaryExpr Is)) AssocLeft,
+
+],
+
+-- not
+[Prefix (reserved "not" >> return (UnaryExpr Not))],
+
 -- and
 [Infix (reserved "and" >> return (BinaryExpr And)) AssocLeft].
+
 -- or
-[Infix (reserved "is" >> return (BinaryExpr Is)) AssocLeft],
--- not
-[Prefix (reserved "not" >> return (UnaryExpr Not))]
+[Infix (reserved "or" >> return (BinaryExpr Or)) AssocLeft],
+
 
 -- negate - integer
 [Prefix (reserved "!" >> return (UnaryExpr Negate))]
