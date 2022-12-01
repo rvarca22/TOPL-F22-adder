@@ -1,4 +1,4 @@
-{--
+{-
  -  Adder is a small but usable subset of the Python language. It is named
  -  for the Blackadder comedy series, much as the Python language is named
  -  for Monty Python.
@@ -43,16 +43,17 @@ adderLexSpec =
     }
   
 boolean :: IParser Bool
-boolean =
-        reserved "True" >> return True
-    <|> reserved "False" >> return False
+boolean = trueLiteral <|> falseLiteral
+  where
+    trueLiteral = reserved "True" >> return True
+    falseLiteral = reserved "False" >> return False
 
 augAssStmt :: IParser Statement -- Bashir's augmented assignment function for different operations
 augAssStmt =
-        reserved "+=" >> return AugPlus
-    <|> reserved "-=" >> return AugMinus
-    <|> reserved "*=" >> return AugMulti
-    <|> reserved "/=" >> return AugDiv
+  reserved "+=" >> return AugPlus
+  <|> reserved "-=" >> return AugMinus
+  <|> reserved "*=" >> return AugMulti
+  <|> reserved "/=" >> return AugDiv
 
 -- integer :: Parser Integer
 integer :: IParser Integer

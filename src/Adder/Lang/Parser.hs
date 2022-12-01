@@ -67,7 +67,8 @@ simpleStmt =
   (choice . map try)
     [AugmentedAssignmentStmt
              <$> identifier
-             <*> (reservedOp augAssStmt >> expression) -- parse the augmented operator here
+             <*> augAssStmt
+             <*> expression -- parse the augmented operator here
              -- then parse the expression
     ]
 
