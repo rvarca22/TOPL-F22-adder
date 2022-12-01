@@ -65,7 +65,7 @@ compoundStmt =
     -- if_stmt ::=  "if" assignment_expression ":" suite   - If statement only
     [ IfStmt
         <$> (reserved "if" >> assignmentExpr)
-        <*> (reservedO ":" >> suite)
+        <*> (reservedOp ":" >> suite)
     ]
 
 -- See https://docs.python.org/3/reference/simple_stmts.html#grammar-token-python-grammar-simple_stmt
