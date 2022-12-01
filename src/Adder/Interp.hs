@@ -51,6 +51,13 @@ resultOfProgram _ env st0 = undefined
 resultOf :: Statement -> Environment -> Store -> IO Store
 resultOf _ env st0 = undefined
 
+--resultOf (PassStmt) _ env st0 = env -- pass does not do anything so would env not cahgne?
+-- where
+--    env = env
+
+-- resultOf(PassStmt) env0 = env1
+---------------------------------------------
+-- env1 = env0
 {-
 resultOf (IfStmt test conseq) p st = if q then st2 else st3
   where

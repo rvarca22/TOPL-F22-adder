@@ -18,6 +18,8 @@ newtype Program
 data Statement
   = IfStmt Expression [Statement] -- If Statement contains Exprression and list of statements - at this time only one statement
   | ReturnStmt Expression  -- I did this to return just an expression of any kind, so the user could use return for many purposes
+  | PassStmt
+  | StmtList [Statement]
   deriving (Show)
 
 -- TODO Build out the abstract syntax for Adder by adding more expressions

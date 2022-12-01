@@ -52,9 +52,10 @@ program = Pgm <$> block statement
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-statement
 statement :: IParser Statement
-statement = 
+statement =
   (choice . map try)
-    [ compoundStmt --Attempted to Fix After Johnson feedback
+    [ compoundStmt,
+      stmtList
     ]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-suite
@@ -77,14 +78,18 @@ compoundStmt =
 simpleStmt :: IParser Statement
 simpleStmt =
   (choice . map try)
-    [
+    [ (reserved "pass" >> return PassStmt), -- pass_stmt ::= "pass"
       ReturnStmt <$> (reserved "return" >> expression)  --  (reserved "return" >> [Expression]) -- Attempted to make it like the IsZero expression after feedback 
       -- Attempted EBNF rule return_stmt ::=  "return" [expression_list]
     ]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-stmt_list
 stmtList :: IParser Statement
-stmtList = undefined
+stmtList =
+  (choice . map try)
+    [ StmtList
+        <$> (sepBy simpleStmt (symbol ";"))
+    ]
 
 -- Implementation of modulo
 -- EBNF Rule: operator ::== "%"
