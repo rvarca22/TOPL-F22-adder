@@ -36,6 +36,7 @@ data BinaryOp
   = Plus
   | Minus
   | Times
+  | Int_Divide
   | Power
   | Equal
   | Less
