@@ -83,8 +83,8 @@ stmtList = undefined
 -- See https://docs.python.org/3/reference/expressions.html#operator-precedence
 table :: [[Operator String () (IndentT Identity) Expression]]
 table =
-  [ [Prefix (reservedOp "-" >> return (UnaryExpr Negative))],
-    [Infix (reservedOp "**" >> return (BinaryExpr Power)) AssocRight],
+  [ [Infix (reservedOp "**" >> return (BinaryExpr Power)) AssocRight],
+    [Prefix (reservedOp "-" >> return (UnaryExpr Negative))],
     [ Infix (reservedOp "*" >> return (BinaryExpr Times)) AssocLeft,
       Infix (reservedOp "/" >> return (BinaryExpr Divide)) AssocLeft,
       Infix (reservedOp "//" >> return (BinaryExpr IntDiv)) AssocLeft,
@@ -92,11 +92,16 @@ table =
     ],
     [ Infix (reservedOp "+" >> return (BinaryExpr Plus)) AssocLeft
     ],
-    [ Infix (reservedOp "<" >> return (BinaryExpr Less)) AssocLeft
-    ],
-    [ Infix (reservedOp "==" >> return (BinaryExpr Equal)) AssocLeft
-    ],
-    [ Infix (reserved "is" >> return (BinaryExpr Is)) AssocLeft
+    [ Infix (reservedOp "in" >> return (BinaryExpr In)) AssocLeft,
+      Infix (reservedOp "not in" >> return (BinaryExpr NotIn)) AssocLeft,
+      Infix (reservedOp "is" >> return (BinaryExpr Is)) AssocLeft,
+      Infix (reservedOp "is not" >> return (BinaryExpr IsNot)) AssocLeft,
+      Infix (reservedOp "<" >> return (BinaryExpr Less)) AssocLeft,
+      Infix (reservedOp "<=" >> return (BinaryExpr LessEqual)) AssocLeft,
+      Infix (reservedOp ">" >> return (BinaryExpr Greater)) AssocLeft,
+      Infix (reservedOp ">=" >> return (BinaryExpr GreatEqual)) AssocLeft,
+      Infix (reservedOp "!=" >> return (BinaryExpr NotEqual)) AssocLeft,
+      Infix (reservedOp "==" >> return (BinaryExpr Equal)) AssocLeft
     ],
     [Prefix (reserved "not" >> return (UnaryExpr Not))],
     [Infix (reserved "and" >> return (BinaryExpr And)) AssocLeft],
