@@ -20,6 +20,7 @@ data Statement
   | ReturnStmt Expression  -- I did this to return just an expression of any kind, so the user could use return for many purposes
   | PassStmt
   | StmtList [Statement]
+  | AssignmentStmt Identifier Expression
   deriving (Show)
 
 -- TODO Build out the abstract syntax for Adder by adding more expressions
