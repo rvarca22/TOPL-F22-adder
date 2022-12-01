@@ -39,14 +39,20 @@ adderLexSpec =
       -- See https://docs.python.org/3/reference/lexical_analysis.html#operators
       Tok.opStart = Tok.opLetter adderLexSpec,
       Tok.opLetter = oneOf "+-*/%@<>&|^~:=!.",
-      Tok.reservedOpNames = ["+=", "-=", "*=", "/="] -- BASHIR'S ADDITION FOR AUGMENTED ASSIGNMENT
+      Tok.reservedOpNames = ["+=", "-=", "*=", "/="] -- Bashir's augmented assignment reserved op names
     }
   
 boolean :: IParser Bool
-boolean = trueLiteral <|> falseLiteral
-  where
-    trueLiteral = reserved "True" >> return True
-    falseLiteral = reserved "False" >> return False
+boolean =
+        reserved "True" >> return True
+    <|> reserved "False" >> return False
+
+augAssStmt :: IParser Statement -- Bashir's augmented assignment function for different operations
+augAssStmt =
+        reserved "+=" >> return AugPlus
+    <|> reserved "-=" >> return AugMinus
+    <|> reserved "*=" >> return AugMulti
+    <|> reserved "/=" >> return AugDiv
 
 -- integer :: Parser Integer
 integer :: IParser Integer

@@ -17,6 +17,7 @@ newtype Program
 -- TODO Build out the abstract syntax for Adder statements
 data Statement
   = NoStmt -- TODO Remove this after adding legit data constructors
+  | AugmentedAssignmentStmt Identifier AugOp Expression -- Bashir's Augmented Assignment constructor
   deriving (Show)
 
 -- TODO Build out the abstract syntax for Adder by adding more expressions
@@ -24,6 +25,14 @@ data Expression
   = UnaryExpr UnaryOp Expression
   | BinaryExpr BinaryOp Expression Expression
   deriving (Show)
+
+-- Bashir's Augment assignment operations
+data AugOp
+    = AugPlus
+    | AugMinus
+    | AugMulti
+    | AugDiv
+    deriving (Show)
 
 data UnaryOp
   = Not
@@ -47,10 +56,6 @@ data ExpVal
   | IntVal Integer
   | FloatVal Float
   | StrVal String
-  | AugPlus Integer
-  | AugMinus Integer
-  | AugMult Integer
-  | AugDiv Integer
   deriving (Eq)
 
 -- TODO Implement "to-string" functionality for new Adder expressed values

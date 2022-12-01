@@ -1,4 +1,4 @@
-{--# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleContexts #-}
 
 {-
  -  Adder is a small but usable subset of the Python language. It is named
@@ -65,7 +65,11 @@ compoundStmt =
 simpleStmt :: IParser Statement
 simpleStmt =
   (choice . map try)
-    []
+    [AugmentedAssignmentStmt
+             <$> identifier
+             <*> (reservedOp augAssStmt >> expression) -- parse the augmented operator here
+             -- then parse the expression
+    ]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-stmt_list
 stmtList :: IParser Statement
@@ -99,3 +103,5 @@ atom :: IParser Expression
 atom =
   undefined
     <?> "atom"
+
+
