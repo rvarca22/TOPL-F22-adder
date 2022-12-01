@@ -74,18 +74,18 @@ stmtList = undefined
 -- See https://docs.python.org/3/reference/expressions.html#operator-precedence
 table :: [[Operator String () (IndentT Identity) Expression]]
 table =
-  [ [ Prefix (reservedOp "-" >> return (UnaryExpr Negative))
+  [ [[ Prefix (reservedOp "-" >> return (UnaryExpr Negative))
     ],
     [ Prefix (reservedOp "+" >> return (UnaryExpr Positive))
-    ],
+    ]],
     [ Infix (reservedOp "**" >> return (BinaryExpr Power)) AssocRight
     ],
     [ Infix (reservedOp "*" >> return (BinaryExpr Times)) AssocLeft
     ],
-    [ Infix (reservedOp "+" >> return (BinaryExpr Plus)) AssocLeft
+    [[ Infix (reservedOp "+" >> return (BinaryExpr Plus)) AssocLeft
     ],
     [ Infix (reservedOp "-" >> return (BinaryExpr Minus)) AssocLeft
-    ],
+    ]],
     [ Infix (reservedOp "<" >> return (BinaryExpr Less)) AssocLeft
     ],
     [ Infix (reservedOp ">" >> return (BinaryExpr Great)) AssocLeft
