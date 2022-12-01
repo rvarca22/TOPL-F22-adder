@@ -55,7 +55,7 @@ resultOf _ env st0 = undefined
 -- where
 --    env = env
 
--- resultOf(PassStmt) env0 = env1 
+-- resultOf(PassStmt) env0 = env1
 ---------------------------------------------
 -- env1 = env0
 

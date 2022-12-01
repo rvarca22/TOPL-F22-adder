@@ -49,10 +49,9 @@ program = Pgm <$> block statement
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-statement
 statement :: IParser Statement
-statement = 
+statement =
   (choice . map try)
-    [
-      compoundStmt, 
+    [ compoundStmt,
       stmtList
     ]
 
@@ -70,17 +69,15 @@ compoundStmt =
 simpleStmt :: IParser Statement
 simpleStmt =
   (choice . map try)
-    [ 
-      (reserved "pass" >> return PassStmt) -- pass_stmt ::= "pass"
+    [ (reserved "pass" >> return PassStmt) -- pass_stmt ::= "pass"
     ]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-stmt_list
 stmtList :: IParser Statement
-stmtList = 
+stmtList =
   (choice . map try)
-    [ 
-       StmtList
-       <$> (sepBy simpleStmt (symbol ";"))
+    [ StmtList
+        <$> (sepBy simpleStmt (symbol ";"))
     ]
 
 -- See https://docs.python.org/3/reference/expressions.html#operator-precedence
