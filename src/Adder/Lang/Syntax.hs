@@ -50,7 +50,7 @@ data ExpVal
   | StrVal String
   deriving (Eq)
 
-data AtomExp
+data Atom
   = Identifier Identifier
   --Will need Literals
   --Will need Enclosure
