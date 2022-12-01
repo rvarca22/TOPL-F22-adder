@@ -23,9 +23,9 @@ data Statement
 data Expression
   = UnaryExpr UnaryOp Expression
   | BinaryExpr BinaryOp Expression Expression
-  | intLiteralExp Integer
-  | stringLiteralExp String
-  | floatLiteralExp Float
+  | IntLiteralExp Integer
+  | StringLiteralExp String
+  | FloatLiteralExp Float
   deriving (Show)
 
 data UnaryOp

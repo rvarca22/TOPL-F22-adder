@@ -92,16 +92,13 @@ table =
 
 -- See https://docs.python.org/3/reference/expressions.html
 expression :: IParser Expression
-expression = (choice . map try)
-    [ 
-      intLiteralExp <$> interger,
-      stringLiteralExp <$> string,
-      floatLiteralExp <$> float
-      
-    ]
+expression = buildExpressionParser table atom <?> "expression"
 
 -- See https://docs.python.org/3/reference/expressions.html#grammar-token-python-grammar-atom
 atom :: IParser Expression
 atom =
-  undefined
-    <?> "atom"
+  IntLiteralExp <$> interger,
+  StringLiteralExp <$> string,
+  FloatLiteralExp <$> float
+  undefined <?> "atom"
+    
