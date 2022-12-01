@@ -18,8 +18,7 @@ import Adder.Lang.Lexer
 import Adder.Lang.Syntax
 import Control.Monad (liftM2)
 import Data.Functor.Identity (Identity)
-import Text.Parsec hiding (parse, string, sepBy)
---import Text.Parsec (ParseError, choice, eof, many, sepBy, try)
+import Text.Parsec hiding (parse, string)
 import Text.Parsec.Expr
 import Text.Parsec.Indent
 
@@ -46,11 +45,7 @@ contents p = do
 
 -- See https://docs.python.org/3/reference/toplevel_components.html#complete-python-programs
 program :: IParser Program
-program = Pgm <$> statement --help
-
---block :: IParser a -> IParser [a]  ?????
---block identifier :: IParser [String]
---block integer :: IParser [Integer]
+program = Pgm <$> block statement
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-statement
 statement :: IParser Statement
@@ -84,8 +79,8 @@ stmtList :: IParser Statement
 stmtList = 
   (choice . map try)
     [ 
-      StmtList
-      <$> (sepBy simpleStmt (symbol ";")) -- keeps saying it does not know what sepBy is. tried adding the import but does not work
+       StmtList
+       <$> (sepBy simpleStmt (symbol ";"))
     ]
 
 -- See https://docs.python.org/3/reference/expressions.html#operator-precedence

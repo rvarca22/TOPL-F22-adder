@@ -51,9 +51,9 @@ resultOfProgram _ env st0 = undefined
 resultOf :: Statement -> Environment -> Store -> IO Store
 resultOf _ env st0 = undefined
 
-resultOf (PassStmt) env0 = env1 -- pass does not do anything so would env not cahgne?
-  where
-    env1 = env0
+--resultOf (PassStmt) _ env st0 = env -- pass does not do anything so would env not cahgne?
+-- where
+--    env = env
 
 -- resultOf(PassStmt) env0 = env1 
 ---------------------------------------------
