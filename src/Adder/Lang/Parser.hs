@@ -87,7 +87,8 @@ table =
     [ Infix (reserved "is" >> return (BinaryExpr Is)) AssocLeft
     ],
     [Prefix (reserved "not" >> return (UnaryExpr Not))],
-    [Infix (reserved "and" >> return (BinaryExpr And)) AssocLeft]
+    [Infix (reserved "and" >> return (BinaryExpr And)) AssocLeft],
+    [Infix (reserved "or" >> return (BinaryExpr Or)) AssocLeft]
   ]
 
 atom :: IParser Expression

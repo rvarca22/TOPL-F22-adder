@@ -40,6 +40,7 @@ data BinaryOp
   | Less
   | And
   | Is
+  | Or
   deriving (Show)
 
 -- TODO Define more expressed values for the Adder language
