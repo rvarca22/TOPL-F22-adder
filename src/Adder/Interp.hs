@@ -50,10 +50,11 @@ resultOfProgram _ env st0 = undefined
 
 resultOf :: Statement -> Environment -> Store -> IO Store
 resultOf _ env st0 = undefined
-resultOf(IfStmt test conseq) p st = if q then st2 --eventually 'else st3'
-  where 
+resultOf (IfStmt test conseq) p st = if q then st2 else st3
+  where
     Answer (BoolVal q) st1 = valueOf test p st
-    st2 = resultOf conseq p st1 
+    st2 = resultOf conseq p st1
+    st3 = resultOf conseq p st2
 
 {- Evaluating a program yields an "answer" - a value and a resulting state. -}
 type Answer = (ExpVal, Store)
@@ -65,7 +66,6 @@ valueOf :: Expression -> Environment -> Store -> Answer
 valueOf _ env st0 = undefined
 
 --valueOF :: assignmentExpr ->  ??
-
 
 {- Auxiliary functions -}
 -- TODO Implement any helper functions needed to simplify the design of the
