@@ -44,6 +44,9 @@ contents p = do
 -- See https://docs.python.org/3/reference/grammar.html
 
 -- See https://docs.python.org/3/reference/toplevel_components.html#complete-python-programs
+
+--block :: IParser statement -> IParser [statement]
+
 program :: IParser Program
 program = Pgm <$> block statement
 
@@ -63,13 +66,21 @@ suite = undefined
 compoundStmt :: IParser Statement
 compoundStmt =
   (choice . map try)
-    []
+    -- if_stmt ::=  "if" assignment_expression ":" suite   - If statement only
+    [ IfStmt
+        <$> (reserved "if" >> assignmentExpr)
+        <*> (reservedOp ":" >> suite)
+    ]
+
+
 
 -- See https://docs.python.org/3/reference/simple_stmts.html#grammar-token-python-grammar-simple_stmt
 simpleStmt :: IParser Statement
 simpleStmt =
   (choice . map try)
-    [ (reserved "pass" >> return PassStmt) -- pass_stmt ::= "pass"
+    [ (reserved "pass" >> return PassStmt), -- pass_stmt ::= "pass"
+      ReturnStmt <$> (reserved "return" >> expression)  --  (reserved "return" >> [Expression]) -- Attempted to make it like the IsZero expression after feedback 
+      -- Attempted EBNF rule return_stmt ::=  "return" [expression_list]
     ]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-stmt_list
@@ -80,28 +91,53 @@ stmtList =
         <$> (sepBy simpleStmt (symbol ";"))
     ]
 
+-- Implementation of modulo
+-- EBNF Rule: operator ::== "%"
+
+-- Implementation of integer division
+-- EBNF Rule: operator ::== "//"
+
+-- Implementation of division
+-- EBNF Rule: operator ::== "/"
+
 -- See https://docs.python.org/3/reference/expressions.html#operator-precedence
 table :: [[Operator String () (IndentT Identity) Expression]]
 table =
-  [ [Prefix (reservedOp "-" >> return (UnaryExpr Negative))],
-    [Infix (reservedOp "**" >> return (BinaryExpr Power)) AssocRight],
-    [ Infix (reservedOp "*" >> return (BinaryExpr Times)) AssocLeft
+  [ [Infix (reservedOp "**" >> return (BinaryExpr Power)) AssocRight],
+    [Prefix (reservedOp "-" >> return (UnaryExpr Negative))],
+    [ Infix (reservedOp "*" >> return (BinaryExpr Times)) AssocLeft,
+      Infix (reservedOp "/" >> return (BinaryExpr Divide)) AssocLeft,
+      Infix (reservedOp "//" >> return (BinaryExpr IntDiv)) AssocLeft,
+      Infix (reservedOp "%" >> return (BinaryExpr Mod)) AssocLeft
     ],
     [ Infix (reservedOp "+" >> return (BinaryExpr Plus)) AssocLeft
     ],
-    [ Infix (reservedOp "<" >> return (BinaryExpr Less)) AssocLeft
-    ],
-    [ Infix (reservedOp "==" >> return (BinaryExpr Equal)) AssocLeft
-    ],
-    [ Infix (reserved "is" >> return (BinaryExpr Is)) AssocLeft
+    [ Infix (reservedOp "in" >> return (BinaryExpr In)) AssocLeft,
+      Infix (reservedOp "not in" >> return (BinaryExpr NotIn)) AssocLeft,
+      Infix (reservedOp "is" >> return (BinaryExpr Is)) AssocLeft,
+      Infix (reservedOp "is not" >> return (BinaryExpr IsNot)) AssocLeft,
+      Infix (reservedOp "<" >> return (BinaryExpr Less)) AssocLeft,
+      Infix (reservedOp "<=" >> return (BinaryExpr LessEqual)) AssocLeft,
+      Infix (reservedOp ">" >> return (BinaryExpr Greater)) AssocLeft,
+      Infix (reservedOp ">=" >> return (BinaryExpr GreatEqual)) AssocLeft,
+      Infix (reservedOp "!=" >> return (BinaryExpr NotEqual)) AssocLeft,
+      Infix (reservedOp "==" >> return (BinaryExpr Equal)) AssocLeft
     ],
     [Prefix (reserved "not" >> return (UnaryExpr Not))],
-    [Infix (reserved "and" >> return (BinaryExpr And)) AssocLeft]
+    [Infix (reserved "and" >> return (BinaryExpr And)) AssocLeft],
+    [Infix (reserved "or" >> return (BinaryExpr Or)) AssocLeft]
   ]
 
 -- See https://docs.python.org/3/reference/expressions.html
 expression :: IParser Expression
 expression = buildExpressionParser table atom <?> "expression"
+
+--assignment_expression ::=  [identifier ":="] expression
+assignmentExpr :: IParser Expression
+assignmentExpr = expression --For now, assignment expression only needs to be an expression
+--(choice . map try)
+--  [<$> identifier
+--    <*> (reservedOp "=" >> Expression)]
 
 -- See https://docs.python.org/3/reference/expressions.html#grammar-token-python-grammar-atom
 atom :: IParser Expression

@@ -16,7 +16,9 @@ newtype Program
 
 -- TODO Build out the abstract syntax for Adder statements
 data Statement
-  = PassStmt
+  = IfStmt Expression [Statement] -- If Statement contains Exprression and list of statements - at this time only one statement
+  | ReturnStmt Expression  -- I did this to return just an expression of any kind, so the user could use return for many purposes
+  | PassStmt
   | StmtList [Statement]
   deriving (Show)
 
@@ -33,14 +35,25 @@ data UnaryOp
 
 -- TODO Build out the abstract syntax for more binary operations
 data BinaryOp
-  = Plus
+  = Power
   | Times
-  | Power
-  | Equal
-  | Less
-  | And
+  | Plus
+  | In
+  | NotIn
   | Is
-  deriving (Show)
+  | IsNot
+  | Less
+  | LessEqual
+  | Greater
+  | GreatEqual
+  | NotEqual
+  | Equal
+  | And
+  | Mod
+  | IntDiv
+  | Divide
+  | Or
+  deriving (Eq, Ord, Show)
 
 -- TODO Define more expressed values for the Adder language
 data ExpVal
