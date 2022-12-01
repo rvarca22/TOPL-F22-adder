@@ -45,11 +45,16 @@ contents p = do
 
 -- See https://docs.python.org/3/reference/toplevel_components.html#complete-python-programs
 program :: IParser Program
-program = Pgm <*> statement
+program = Pgm <$> block statement --Fixed to dollar sign but did not get the block statement
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-statement
 statement :: IParser Statement
-statement = [compoundStmt, simpleStmt]
+statement = 
+  (choice . map try)
+    [
+    compoundStmt --Attempted to Fix After Johnson feedback
+    
+    ]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-suite
 suite :: IParser [Statement]
@@ -68,8 +73,8 @@ simpleStmt :: IParser Statement
 simpleStmt =
   (choice . map try)
     [
-      (reserved "return" >> return [expression] ) -- Attempted to add the Return Statement as a Simple statement 
-      -- Attempted EBNF rulereturn_stmt ::=  "return" [expression_list]
+      ReturnStmt <$> (reserved "return" >> expression)  --  (reserved "return" >> [Expression]) -- Attempted to make it like the IsZero expression after feedback 
+      -- Attempted EBNF rule return_stmt ::=  "return" [expression_list]
     ]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-stmt_list
