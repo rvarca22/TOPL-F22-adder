@@ -97,8 +97,8 @@ expression = buildExpressionParser table atom <?> "expression"
 -- See https://docs.python.org/3/reference/expressions.html#grammar-token-python-grammar-atom
 atom :: IParser Expression
 atom =
-  IntLiteralExp <$> interger,
-  StringLiteralExp <$> string,
-  FloatLiteralExp <$> float
-  undefined <?> "atom"
+  IntLiteralExp <$> integer
+  <|> StringLiteralExp <$> string
+  <|> FloatLiteralExp <$> float
+  <?> "atom"
     
