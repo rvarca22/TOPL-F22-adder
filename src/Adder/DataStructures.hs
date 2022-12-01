@@ -12,12 +12,12 @@ module Adder.DataStructures
     StoVal,
     Binding,
     Environment (..),
-    Procedure (..),
+    Function (..),
   )
 where
 
 import Adder.Defs (Identifier, Reference)
-import Adder.Lang.Syntax (ExpVal, Expression)
+import Adder.Lang.Syntax (ExpVal, Expression, Statement)
 
 -- Storable values are any expressed value
 type StoVal = ExpVal
@@ -45,7 +45,7 @@ envToList (Environment x v savedEnv) = (x, v) : envToList savedEnv
 {- Representation of closed procedure (i.e. closure) -}
 
 -- TODO Fix the implementation of un-closed procedures.
-data Procedure
-  = ClosedProcedure {procVar :: Identifier, procBody :: Expression, procEnv :: Environment}
-  | UnclosedProcedure {procVar :: Identifier, procBody :: Expression}
+data Function
+  = ClosedFunction {funcParams :: [Identifier], funcBody :: [Statement], funcEnv :: Environment}
+  | UnclosedFunction {funcParams :: [Identifier], funcBody :: [Statement]}
   deriving (Show)

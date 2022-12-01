@@ -15,7 +15,7 @@ module Adder.Interp
 where
 
 -- import Adder.Checker
-import Adder.DataStructures (DenVal, Environment, ExpVal (..), Procedure (..))
+import Adder.DataStructures (DenVal, Environment, ExpVal (..), Function (..))
 -- import Adder.TypeEnv (TEnv (..), TypeEnvironment)
 import Adder.Defs (Source)
 import Adder.Environment (Env (..))

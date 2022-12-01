@@ -1,12 +1,12 @@
-n = 5
+n = 5.0
 computation = "area"
 
 def circumference(r):
-  c = 3.14 * 2 * r
+  c = 3.14 * 2.0 * r
   return c
 
 def area_of_circle(r):
-  a = 3.14 * r**2
+  a = 3.14 * r**2.0
   return a
 
 

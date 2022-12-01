@@ -8,7 +8,7 @@
  -}
 module Adder.Environment (Env (..)) where
 
-import Adder.DataStructures (Binding, DenVal, Environment (..), ExpVal (..), Procedure (..))
+import Adder.DataStructures (Binding, DenVal, Environment (..), ExpVal (..), Function (..))
 import Adder.Defs (Identifier)
 
 {- Interface for an environment (symbol-to-value mapping) -}
