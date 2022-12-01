@@ -52,7 +52,10 @@ program = Pgm <$> block statement
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-statement
 statement :: IParser Statement
-statement = compoundStmt -- for my
+statement = 
+  (choice . map try)
+    [ compoundStmt --Attempted to Fix After Johnson feedback
+    ]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-suite
 suite :: IParser [Statement]
@@ -68,11 +71,16 @@ compoundStmt =
         <*> (reservedOp ":" >> suite)
     ]
 
+
+
 -- See https://docs.python.org/3/reference/simple_stmts.html#grammar-token-python-grammar-simple_stmt
 simpleStmt :: IParser Statement
 simpleStmt =
   (choice . map try)
-    []
+    [
+      ReturnStmt <$> (reserved "return" >> expression)  --  (reserved "return" >> [Expression]) -- Attempted to make it like the IsZero expression after feedback 
+      -- Attempted EBNF rule return_stmt ::=  "return" [expression_list]
+    ]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-stmt_list
 stmtList :: IParser Statement
