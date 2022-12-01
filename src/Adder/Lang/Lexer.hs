@@ -5,8 +5,11 @@
  -
  -  This module provides the lexical specification for Adder.
  -}
+{-# OPTIONS_GHC -Wno-missing-export-lists #-}
+
 module Adder.Lang.Lexer where
 
+import Adder.Lang.Syntax (AugOp (..))
 import Data.Functor.Identity (Identity)
 import Text.Parsec (alphaNum, char, letter, oneOf, spaces, (<|>))
 import Text.Parsec.Indent (IndentParser, IndentT)
@@ -39,22 +42,30 @@ adderLexSpec =
       -- See https://docs.python.org/3/reference/lexical_analysis.html#operators
       Tok.opStart = Tok.opLetter adderLexSpec,
       Tok.opLetter = oneOf "+-*/%@<>&|^~:=!.",
-      Tok.reservedOpNames = 
+      Tok.reservedOpNames =
         ["+=", "-=", "*=", "/=", "**", "-", "*", "%", "//", "/", "+", "<", "<=", ">", ">=", "!=", "=="]
     }
-  
+
 boolean :: IParser Bool
 boolean = trueLiteral <|> falseLiteral
   where
     trueLiteral = reserved "True" >> return True
     falseLiteral = reserved "False" >> return False
 
-augAssStmt :: IParser Statement -- Bashir's augmented assignment function for different operations
+augAssStmt :: IParser AugOp -- Bashir's augmented assignment function for different operations
 augAssStmt =
-  reserved "+=" >> return AugPlus
-  <|> reserved "-=" >> return AugMinus
-  <|> reserved "*=" >> return AugMulti
-  <|> reserved "/=" >> return AugDiv
+  ( reserved "+="
+      >> return AugPlus
+  )
+    <|> ( reserved "-="
+            >> return AugMinus
+        )
+    <|> ( reserved "*="
+            >> return AugMulti
+        )
+    <|> ( reserved "/="
+            >> return AugDiv
+        )
 
 -- integer :: Parser Integer
 integer :: IParser Integer

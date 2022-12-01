@@ -45,7 +45,7 @@ contents p = do
 
 -- See https://docs.python.org/3/reference/toplevel_components.html#complete-python-programs
 
---block :: IParser statement -> IParser [statement]
+-- block :: IParser statement -> IParser [statement]
 
 program :: IParser Program
 program = Pgm <$> block statement
@@ -72,14 +72,12 @@ compoundStmt =
         <*> (reservedOp ":" >> suite)
     ]
 
-
-
 -- See https://docs.python.org/3/reference/simple_stmts.html#grammar-token-python-grammar-simple_stmt
 simpleStmt :: IParser Statement
 simpleStmt =
   (choice . map try)
-    [ (reserved "pass" >> return PassStmt), -- pass_stmt ::= "pass"
-      ReturnStmt <$> (reserved "return" >> expression),  -- (reserved "return" >> [Expression]) -- Attempted to make it like the IsZero expression after feedback 
+    [ reserved "pass" >> return PassStmt, -- pass_stmt ::= "pass"
+      ReturnStmt <$> (reserved "return" >> expression), -- (reserved "return" >> [Expression]) -- Attempted to make it like the IsZero expression after feedback
       -- Attempted EBNF rule return_stmt ::=  "return" [expression_list]
       AssignmentStmt
         <$> identifier
@@ -95,7 +93,7 @@ stmtList :: IParser Statement
 stmtList =
   (choice . map try)
     [ StmtList
-        <$> (sepBy simpleStmt (symbol ";"))
+        <$> sepBy simpleStmt (symbol ";")
     ]
 
 -- Implementation of modulo
@@ -139,10 +137,10 @@ table =
 expression :: IParser Expression
 expression = buildExpressionParser table atom <?> "expression"
 
---assignment_expression ::=  [identifier ":="] expression
+-- assignment_expression ::=  [identifier ":="] expression
 assignmentExpr :: IParser Expression
-assignmentExpr = expression --For now, assignment expression only needs to be an expression
---(choice . map try)
+assignmentExpr = expression -- For now, assignment expression only needs to be an expression
+-- (choice . map try)
 --  [<$> identifier
 --    <*> (reservedOp "=" >> Expression)]
 
@@ -151,5 +149,3 @@ atom :: IParser Expression
 atom =
   undefined
     <?> "atom"
-
-

@@ -5,6 +5,8 @@
  -
  -  This module provides the abstract syntax representation for Adder.
  -}
+{-# OPTIONS_GHC -Wno-missing-export-lists #-}
+
 module Adder.Lang.Syntax where
 
 import Adder.Defs (Identifier)
@@ -17,7 +19,7 @@ newtype Program
 -- TODO Build out the abstract syntax for Adder statements
 data Statement
   = IfStmt Expression [Statement] -- If Statement contains Exprression and list of statements - at this time only one statement
-  | ReturnStmt Expression  -- I did this to return just an expression of any kind, so the user could use return for many purposes
+  | ReturnStmt Expression -- I did this to return just an expression of any kind, so the user could use return for many purposes
   | PassStmt
   | StmtList [Statement]
   | AssignmentStmt Identifier Expression
