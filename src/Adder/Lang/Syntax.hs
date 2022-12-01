@@ -33,15 +33,25 @@ data UnaryOp
 
 -- TODO Build out the abstract syntax for more binary operations
 data BinaryOp
-  = Plus
+  = Power
   | Times
-  | Power
-  | Equal
-  | Less
-  | And
+  | Plus
+  | In
+  | NotIn
   | Is
+  | IsNot
+  | Less
+  | LessEqual
+  | Greater
+  | GreatEqual
+  | NotEqual
+  | Equal
+  | And
+  | Mod
+  | IntDiv
+  | Divide
   | Or
-  deriving (Show)
+  deriving (Eq, Ord, Show)
 
 -- TODO Define more expressed values for the Adder language
 data ExpVal
