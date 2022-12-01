@@ -92,7 +92,13 @@ table =
 
 atom :: IParser Expression
 atom =
-  atomExp
+  (choice . map try)
+  [
+    -- atom  ::=  identifier | literal | enclosure
+    AtomExp <$> identifier
+    --AtomExp <$> literal,
+    --AtomExp <$> enclosure
+  ]
 
 -- See https://docs.python.org/3/reference/expressions.html
 expression :: IParser Expression
@@ -101,40 +107,37 @@ expression :: IParser Expression
 expression = 
   (choice . map try)
   [
-    -- atom  ::=  identifier | literal | enclosure
-    atomExp <$> identifier,
-    atomExp <$> literal,
-    atomExp <$> enclosure
+    ExpVal <$> identifier
   ]
   -- literal ::=  stringliteral | bytesliteral | integer | floatnumber | imagnumber
   -- Others should be handling something similar to this
-literal = 
-  (choice . map try)
-  [
-    lit <$> string,
-    lit <$> integer,
-    lit <$> float
-  ]
+-- literal = 
+--   (choice . map try)
+--   [
+--     lit <$> string,
+--     lit <$> integer,
+--     lit <$> float
+--   ]
   -- enclosure ::=  parenth_form | list_display | dict_display | set_display | generator_expression | yield_atom
-enclosure = 
-  (choice . map try)
-  [
-    enc <$> parenth_form,
-    enc <$> list_display,
-    enc <$> dict_display,
-    enc <$> set_display,
-    enc <$> generator_expression,
-    enc <$> yield_atom
-  ]
+-- enclosure = 
+--   (choice . map try)
+--   [
+--     enc <$> parenth_form,
+--     enc <$> list_display,
+--     enc <$> dict_display,
+--     enc <$> set_display,
+--     enc <$> generator_expression,
+--     enc <$> yield_atom
+--   ]
 
   --yield_atom       ::=  "(" yield_expression ")"
   --yield_expression ::=  "yield" [expression_list | "from" expression]
-yield atom = symbol "(" >> yield_expression >* symbol ")"
+-- yield_atom = symbol "(" >> yield_expression >* symbol ")"
 
-yield_expression =
-  (choice . map try)
-  [
-    yield_exp <$> (reserved "yield" >> expression_list)
-    yield_exp <$> (reserved "yield" >> reserved "from" >> expression_list)
-  ]
+-- yield_expression =
+--   (choice . map try)
+--   [
+--     yield_exp <$> (reserved "yield" >> expression_list)
+--     yield_exp <$> (reserved "yield" >> reserved "from" >> expression_list)
+--   ]
 

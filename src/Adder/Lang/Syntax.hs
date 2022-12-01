@@ -23,6 +23,7 @@ data Statement
 data Expression
   = UnaryExpr UnaryOp Expression
   | BinaryExpr BinaryOp Expression Expression
+  | AtomExp Atom
   deriving (Show)
 
 data UnaryOp
@@ -50,9 +51,9 @@ data ExpVal
   deriving (Eq)
 
 data AtomExp
-  = identifier Identifier
-  | literal Literal
-  | enclosure Enclosure
+  = Identifier Identifier
+  --Will need Literals
+  --Will need Enclosure
 
 -- TODO Implement "to-string" functionality for new Adder expressed values
 instance Show ExpVal where
