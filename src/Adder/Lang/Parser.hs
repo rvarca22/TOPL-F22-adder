@@ -71,7 +71,6 @@ simpleStmt =
 stmtList :: IParser Statement
 stmtList = undefined
 
-
 -- Implementation of modulo
 -- EBNF Rule: operator ::== "%"
 
@@ -87,9 +86,10 @@ table =
   [ [Prefix (reservedOp "-" >> return (UnaryExpr Negative))],
     [Infix (reservedOp "**" >> return (BinaryExpr Power)) AssocRight],
     [ Infix (reservedOp "*" >> return (BinaryExpr Times)) AssocLeft,
-    Infix (reservedOp "/" >> return (BinaryExpr Divide)) AssocLeft,
-    Infix (reservedOp "//" >> return (BinaryExpr IntDiv)) AssocLeft,
-    Infix (reservedOp "%" >> return (BinaryExpr Mod)) AssocLeft],
+      Infix (reservedOp "/" >> return (BinaryExpr Divide)) AssocLeft,
+      Infix (reservedOp "//" >> return (BinaryExpr IntDiv)) AssocLeft,
+      Infix (reservedOp "%" >> return (BinaryExpr Mod)) AssocLeft
+    ],
     [ Infix (reservedOp "+" >> return (BinaryExpr Plus)) AssocLeft
     ],
     [ Infix (reservedOp "<" >> return (BinaryExpr Less)) AssocLeft
@@ -111,4 +111,3 @@ atom :: IParser Expression
 atom =
   undefined
     <?> "atom"
-
