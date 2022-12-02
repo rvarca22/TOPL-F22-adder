@@ -79,42 +79,42 @@ stmtList = undefined
 -- See https://docs.python.org/3/reference/expressions.html#operator-precedence
 table :: [[Operator String () (IndentT Identity) Expression]]
 table =
-[
--- Exponentiation
-[Infix (reservedOp "**" >> return (BinaryExpr Power)) AssocRight],
--- Negative
-[Prefix (reservedOp "-" >> return (UnaryExpr Negative))],
--- Multiplication
-[Infix (reservedOp "*" >> return (BinaryExpr Times)) AssocLeft],
--- addition - string
-[Infix (reservedOp "+" >> return (BinaryExpr Plus)) AssocLeft],
--- Comparative Equals
-[Infix (reservedOp "==" >> return (BinaryExpr Equal)) AssocLeft],
--- Comparative Not Equals
-[Infix (reservedOp "!=" >> return (BinaryExpr NotEqual)) AssocLeft],
+  [
+	  -- Exponentiation
+	[Infix (reservedOp "**" >> return (BinaryExpr Power)) AssocRight],
+	-- Negative
+	[Prefix (reservedOp "-" >> return (UnaryExpr Negative))],
+	-- Multiplication
+	[Infix (reservedOp "*" >> return (BinaryExpr Times)) AssocLeft],
+	-- addition - string
+	[Infix (reservedOp "+" >> return (BinaryExpr Plus)) AssocLeft],
+	-- Comparative Equals
+	[Infix (reservedOp "==" >> return (BinaryExpr Equal)) AssocLeft],
+	-- Comparative Not Equals
+	[Infix (reservedOp "!=" >> return (BinaryExpr NotEqual)) AssocLeft],
 
-[
-    -- less or equal
-    Infix (reservedOp "<=" >> return (BinaryExpr LessEq)) AssocLeft,
-    -- greater or equal
-    Infix (reservedOp ">=" >> return (BinaryExpr GreaterEq)) AssocLeft,
-    -- less
-    Infix (reservedOp "<" >> return (BinaryExpr Less)) AssocLeft,
-    -- greater
-    Infix (reservedOp ">" >> return (BinaryExpr Greater)) AssocLeft,
-    Infix (reserved "is" >> return (BinaryExpr Is)) AssocLeft,
+	[
+	-- less or equal
+	Infix (reservedOp "<=" >> return (BinaryExpr LessEq)) AssocLeft,
+	-- greater or equal
+	Infix (reservedOp ">=" >> return (BinaryExpr GreaterEq)) AssocLeft,
+	-- less
+	Infix (reservedOp "<" >> return (BinaryExpr Less)) AssocLeft,
+	-- greater
+	Infix (reservedOp ">" >> return (BinaryExpr Greater)) AssocLeft,
+	Infix (reserved "is" >> return (BinaryExpr Is)) AssocLeft
 
-],
+	],
 
--- not
-[Prefix (reserved "not" >> return (UnaryExpr Not))],
+	-- not
+	[Prefix (reserved "not" >> return (UnaryExpr Not))],
 
--- and
-[Infix (reserved "and" >> return (BinaryExpr And)) AssocLeft],
+	-- and
+	[Infix (reserved "and" >> return (BinaryExpr And)) AssocLeft],
 
--- or
-[Infix (reserved "or" >> return (BinaryExpr Or)) AssocLeft]
-
+	 -- or
+	[Infix (reserved "or" >> return (BinaryExpr Or)) AssocLeft]
+  ]
 
 
 -- See https://docs.python.org/3/reference/expressions.html
