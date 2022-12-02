@@ -11,7 +11,7 @@
 module Main where
 
 import Adder.Defs
-import qualified Adder.Interp as Adder (interpFile, interpInteractive, parseInteractive)
+import qualified Adder.Interp as Adder (interpFile, interpInteractive, parseFile, parseInteractive)
 import Control.Exception (ErrorCall, catch)
 import Control.Monad (unless, void, when)
 import Control.Monad.Trans (liftIO)
@@ -36,13 +36,13 @@ repl = do
         Nothing -> outputStrLn "Goodbye."
         Just ":q" -> return ()
         Just (':' : cmd) ->
-          ( when (take 2 cmd == "p ") $
-              liftIO (doInterp Adder.parseInteractive (read $ drop 2 cmd))
-          )
+          when
+            (take 2 cmd == "p ")
+            (liftIO (doInterp Adder.parseInteractive (drop 2 cmd)))
             >> loop
         Just input ->
           unless (input == ":q") $
-            liftIO (doInterp' Adder.interpInteractive (read input))
+            liftIO (doInterp' Adder.interpInteractive input)
               >> loop
 
 -- unless (input == ":q") $
@@ -73,4 +73,16 @@ run = do
       case Adder.interpFile prog of
         Left err -> print err
         Right st -> st >>= print
+        `catch` (\e -> hPrint stderr (e :: ErrorCall))
+
+runparse :: IO ()
+runparse = do
+  args <- getArgs
+  if null args
+    then putStrLn "parseadder: Missing source file name"
+    else do
+      prog <- readFile $ head args
+      case Adder.parseFile prog of
+        Left err -> print err
+        Right pgm -> pPrint pgm
         `catch` (\e -> hPrint stderr (e :: ErrorCall))
