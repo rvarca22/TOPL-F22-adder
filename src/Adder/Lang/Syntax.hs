@@ -24,6 +24,7 @@ data Statement
   | StmtList [Statement]
   | AssignmentStmt Identifier Expression
   | AugmentedAssignmentStmt Identifier AugOp Expression -- Bashir's Augmented Assignment constructor
+  | BreakStmt
   deriving (Show)
 
 -- TODO Build out the abstract syntax for Adder by adding more expressions

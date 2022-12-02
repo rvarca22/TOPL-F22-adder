@@ -85,7 +85,8 @@ simpleStmt =
       AugmentedAssignmentStmt
         <$> identifier
         <*> augAssStmt -- parse the augmented operator here
-        <*> expression -- then parse the expression
+        <*> expression -- then parse the expression,
+      BreakStmt <$ reserved "BreakStmt"
     ]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-stmt_list
@@ -119,7 +120,7 @@ table =
     ],
     [ Infix (reservedOp "in" >> return (BinaryExpr In)) AssocLeft,
       Infix (reservedOp "not in" >> return (BinaryExpr NotIn)) AssocLeft,
-      Infix (reservedOp "is" >> return (BinaryExpr Is)) AssocLeft,
+      Infix (reserved "is" >> return (BinaryExpr Is)) AssocLeft,
       Infix (reservedOp "is not" >> return (BinaryExpr IsNot)) AssocLeft,
       Infix (reservedOp "<" >> return (BinaryExpr Less)) AssocLeft,
       Infix (reservedOp "<=" >> return (BinaryExpr LessEqual)) AssocLeft,
