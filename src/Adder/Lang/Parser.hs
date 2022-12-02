@@ -85,7 +85,7 @@ simpleStmt =
       AugmentedAssignmentStmt
         <$> identifier
         <*> augAssStmt -- parse the augmented operator here
-        <*> expression -- then parse the expression,
+        <*> expression, -- then parse the expression
       BreakStmt <$ reserved "BreakStmt"
     ]
 
