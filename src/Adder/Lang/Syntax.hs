@@ -31,6 +31,9 @@ data Statement
 data Expression
   = UnaryExpr UnaryOp Expression
   | BinaryExpr BinaryOp Expression Expression
+  | IntLiteralExp Integer
+  | StringLiteralExp String
+  | FloatLiteralExp Float
   deriving (Show)
 
 -- Bashir's Augment assignment operations

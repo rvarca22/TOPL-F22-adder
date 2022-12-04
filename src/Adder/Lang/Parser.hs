@@ -148,5 +148,8 @@ assignmentExpr = expression -- For now, assignment expression only needs to be a
 -- See https://docs.python.org/3/reference/expressions.html#grammar-token-python-grammar-atom
 atom :: IParser Expression
 atom =
-  undefined
-    <?> "atom"
+  IntLiteralExp <$> integer
+  <|> StringLiteralExp <$> string
+  <|> FloatLiteralExp <$> float
+  <?> "atom"
+    
