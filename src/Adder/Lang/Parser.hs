@@ -21,6 +21,7 @@ import Data.Functor.Identity (Identity)
 import Text.Parsec hiding (parse, string)
 import Text.Parsec.Expr
 import Text.Parsec.Indent
+import Adder.Lang.Syntax (Atom(IdAtom))
 
 parseFile :: String -> Either ParseError Program
 parseFile = parse (contents program) "<stdin>"
@@ -109,7 +110,7 @@ table =
   ]
 
 atom :: IParser Expression
-atom = AtomExp <$> Id
+atom = AtomExp . IdAtom <$> identifier
   -- (choice . map try)
   -- [
   --   -- atom  ::=  identifier | literal | enclosure
@@ -122,42 +123,4 @@ atom = AtomExp <$> Id
 expression :: IParser Expression
 expression = buildExpressionParser table atom
   <?> "expression"
-
--- See https://docs.python.org/3/reference/expressions.html#grammar-token-python-grammar-atom
--- expression = 
---   (choice . map try)
---   [
---     --ExpVal <$> identifier
---   ]
-  -- literal ::=  stringliteral | bytesliteral | integer | floatnumber | imagnumber
-  -- Others should be handling something similar to this
--- literal = 
---   (choice . map try)
---   [
---     lit <$> string,
---     lit <$> integer,
---     lit <$> float
---   ]
-  -- enclosure ::=  parenth_form | list_display | dict_display | set_display | generator_expression | yield_atom
--- enclosure = 
---   (choice . map try)
---   [
---     enc <$> parenth_form,
---     enc <$> list_display,
---     enc <$> dict_display,
---     enc <$> set_display,
---     enc <$> generator_expression,
---     enc <$> yield_atom
---   ]
-
-  --yield_atom       ::=  "(" yield_expression ")"
-  --yield_expression ::=  "yield" [expression_list | "from" expression]
--- yield_atom = symbol "(" >> yield_expression >* symbol ")"
-
--- yield_expression =
---   (choice . map try)
---   [
---     yield_exp <$> (reserved "yield" >> expression_list)
---     yield_exp <$> (reserved "yield" >> reserved "from" >> expression_list)
---   ]
 

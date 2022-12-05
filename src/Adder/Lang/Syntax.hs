@@ -62,7 +62,7 @@ data ExpVal
   deriving (Eq)
 
 data Atom
-  = Id Identifier
+  = IdAtom Identifier
   deriving (Show)
   --Will need Literals
   --Will need Enclosure
