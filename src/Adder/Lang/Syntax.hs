@@ -5,6 +5,8 @@
  -
  -  This module provides the abstract syntax representation for Adder.
  -}
+{-# OPTIONS_GHC -Wno-missing-export-lists #-}
+
 module Adder.Lang.Syntax where
 
 import Adder.Defs (Identifier)
@@ -16,7 +18,13 @@ newtype Program
 
 -- TODO Build out the abstract syntax for Adder statements
 data Statement
-  = NoStmt -- TODO Remove this after adding legit data constructors
+  = IfStmt Expression [Statement] -- If Statement contains Exprression and list of statements - at this time only one statement
+  | ReturnStmt Expression -- I did this to return just an expression of any kind, so the user could use return for many purposes
+  | PassStmt
+  | StmtList [Statement]
+  | AssignmentStmt Identifier Expression
+  | AugmentedAssignmentStmt Identifier AugOp Expression -- Bashir's Augmented Assignment constructor
+  | BreakStmt
   deriving (Show)
 
 -- TODO Build out the abstract syntax for Adder by adding more expressions
@@ -24,7 +32,18 @@ data Expression
   = UnaryExpr UnaryOp Expression
   | BinaryExpr BinaryOp Expression Expression
   | AtomExp Atom
+  | IntLiteralExp Integer
+  | StringLiteralExp String
+  | FloatLiteralExp Float
   deriving (Show)
+
+-- Bashir's Augment assignment operations
+data AugOp
+    = AugPlus
+    | AugMinus
+    | AugMulti
+    | AugDiv
+    deriving (Show)
 
 data UnaryOp
   = Not
