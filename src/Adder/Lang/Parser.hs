@@ -21,6 +21,7 @@ import Data.Functor.Identity (Identity)
 import Text.Parsec hiding (parse, string)
 import Text.Parsec.Expr
 import Text.Parsec.Indent
+import Adder.Lang.Syntax (Atom(IdAtom))
 
 parseFile :: String -> Either ParseError Program
 parseFile = parse (contents program) "<stdin>"
@@ -134,22 +135,17 @@ table =
     [Infix (reserved "or" >> return (BinaryExpr Or)) AssocLeft]
   ]
 
+atom :: IParser Expression
+atom = AtomExp . IdAtom <$> identifier
+  -- (choice . map try)
+  -- [
+  --   -- atom  ::=  identifier | literal | enclosure
+  --   AtomExp <$> Id
+  --   --AtomExp <$> literal,
+  --   --AtomExp <$> enclosure
+  -- ]
+
 -- See https://docs.python.org/3/reference/expressions.html
 expression :: IParser Expression
-expression = buildExpressionParser table atom <?> "expression"
-
--- assignment_expression ::=  [identifier ":="] expression
-assignmentExpr :: IParser Expression
-assignmentExpr = expression -- For now, assignment expression only needs to be an expression
--- (choice . map try)
---  [<$> identifier
---    <*> (reservedOp "=" >> Expression)]
-
--- See https://docs.python.org/3/reference/expressions.html#grammar-token-python-grammar-atom
-atom :: IParser Expression
-atom =
-  IntLiteralExp <$> integer
-  <|> StringLiteralExp <$> string
-  <|> FloatLiteralExp <$> float
-  <?> "atom"
-    
+expression = buildExpressionParser table atom
+  <?> "expression"

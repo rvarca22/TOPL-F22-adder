@@ -31,6 +31,7 @@ data Statement
 data Expression
   = UnaryExpr UnaryOp Expression
   | BinaryExpr BinaryOp Expression Expression
+  | AtomExp Atom
   | IntLiteralExp Integer
   | StringLiteralExp String
   | FloatLiteralExp Float
@@ -79,9 +80,16 @@ data ExpVal
   | StrVal String
   deriving (Eq)
 
+data Atom
+  = IdAtom Identifier
+  deriving (Show)
+  --Will need Literals
+  --Will need Enclosure
+
 -- TODO Implement "to-string" functionality for new Adder expressed values
 instance Show ExpVal where
   show (BoolVal p) = show p
   show (IntVal p) = show p
   show (FloatVal p) = show p
   show (StrVal p) = show p
+
