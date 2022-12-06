@@ -45,12 +45,19 @@ contents p = do
 -- See https://docs.python.org/3/reference/grammar.html
 
 -- See https://docs.python.org/3/reference/toplevel_components.html#complete-python-programs
+
+-- block :: IParser statement -> IParser [statement]
+
 program :: IParser Program
-program = undefined
+program = Pgm <$> block statement
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-statement
 statement :: IParser Statement
-statement = undefined
+statement =
+  (choice . map try)
+    [ compoundStmt,
+      stmtList
+    ]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-suite
 suite :: IParser [Statement]
@@ -60,17 +67,36 @@ suite = undefined
 compoundStmt :: IParser Statement
 compoundStmt =
   (choice . map try)
-    []
+    -- if_stmt ::=  "if" assignment_expression ":" suite   - If statement only
+    [ IfStmt
+        <$> (reserved "if" >> assignmentExpr)
+        <*> (reservedOp ":" >> suite)
+    ]
 
 -- See https://docs.python.org/3/reference/simple_stmts.html#grammar-token-python-grammar-simple_stmt
 simpleStmt :: IParser Statement
 simpleStmt =
   (choice . map try)
-    []
+    [ reserved "pass" >> return PassStmt, -- pass_stmt ::= "pass"
+      ReturnStmt <$> (reserved "return" >> expression), -- (reserved "return" >> [Expression]) -- Attempted to make it like the IsZero expression after feedback
+      -- Attempted EBNF rule return_stmt ::=  "return" [expression_list]
+      AssignmentStmt
+        <$> identifier
+        <*> (reservedOp "=" >> expression),
+      AugmentedAssignmentStmt
+        <$> identifier
+        <*> augAssStmt -- parse the augmented operator here
+        <*> expression, -- then parse the expression
+      BreakStmt <$ reserved "BreakStmt"
+    ]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-stmt_list
 stmtList :: IParser Statement
-stmtList = undefined
+stmtList =
+  (choice . map try)
+    [ StmtList
+        <$> sepBy simpleStmt (symbol ";")
+    ]
 
 -- Implementation of modulo
 -- EBNF Rule: operator ::== "%"
@@ -95,7 +121,7 @@ table =
     ],
     [ Infix (reservedOp "in" >> return (BinaryExpr In)) AssocLeft,
       Infix (reservedOp "not in" >> return (BinaryExpr NotIn)) AssocLeft,
-      Infix (reservedOp "is" >> return (BinaryExpr Is)) AssocLeft,
+      Infix (reserved "is" >> return (BinaryExpr Is)) AssocLeft,
       Infix (reservedOp "is not" >> return (BinaryExpr IsNot)) AssocLeft,
       Infix (reservedOp "<" >> return (BinaryExpr Less)) AssocLeft,
       Infix (reservedOp "<=" >> return (BinaryExpr LessEqual)) AssocLeft,
@@ -123,4 +149,3 @@ atom = AtomExp . IdAtom <$> identifier
 expression :: IParser Expression
 expression = buildExpressionParser table atom
   <?> "expression"
-
