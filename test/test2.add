@@ -14,3 +14,6 @@ if computation == "area":
   print(area_of_circle(n))
 else:
   print(circumference(n))
+
+if True:
+  print("Hello, World!")
