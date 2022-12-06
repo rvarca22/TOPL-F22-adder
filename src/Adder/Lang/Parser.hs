@@ -68,8 +68,12 @@ compoundStmt :: IParser Statement
 compoundStmt =
   (choice . map try)
     -- if_stmt ::=  "if" assignment_expression ":" suite   - If statement only
+    -- WhileStmt ::= "while" assignmentExpr ":" suite
     [ IfStmt
         <$> (reserved "if" >> assignmentExpr)
+        <*> (reservedOp ":" >> suite)
+      WhileStmt
+        <$> (reserved "while" >> assignmentExpr)
         <*> (reservedOp ":" >> suite)
     ]
 
