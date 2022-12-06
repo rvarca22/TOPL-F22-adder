@@ -76,11 +76,11 @@ type Answer = (ExpVal, Store)
 valueOf :: Expression -> Environment -> Store -> Answer
 valueOf _ env st0 = undefined
 -- Binary Operation
-valueOf (BinaryExp op exp₁ exp₂) ρ = valueOfBop op1 val₁ val₂
+valueOf (BinaryExp op exp₁ exp₂) st0 = valueOfBop op1 val₁ val₂ st2
   where
+    op1 = op
     val₁ st1 = valueOf(exp₁) st0
     val₂ st2 = valueOf(exp₂) st1
-    op1 = op
 
 -- Don't forget about free store
 
