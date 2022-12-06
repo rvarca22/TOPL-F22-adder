@@ -76,11 +76,10 @@ type Answer = (ExpVal, Store)
 valueOf :: Expression -> Environment -> Store -> Answer
 valueOf _ env st0 = undefined
 -- Binary Operation
-valueOf (BinaryExp op exp₁ exp₂) st0 = valueOfBop op1 val₁ val₂ st2
+valueOf (BinaryExp op exp1 exp2) env st0 = valueOfBop op val1 val2 st2
   where
-    op1 = op
-    val₁ st1 = valueOf(exp₁) st0
-    val₂ st2 = valueOf(exp₂) st1
+    val1 st1 = valueOf(exp1) env st0
+    val2 st2 = valueOf(exp2) env st1
 
 -- Don't forget about free store
 
@@ -91,11 +90,9 @@ valueOf (BinaryExp op exp₁ exp₂) st0 = valueOfBop op1 val₁ val₂ st2
 -- interpreter (e.g., the applyProcedure helper function).
 
 valueOfBop :: BinaryOp -> ExpVal -> ExpVal -> ExpVal
-valueOfBop op val₁ val₂ ρ = case op of
+valueOfBop op val1 val2 = case op of
   _ -> undefined
   --Code here
-  --where
-    --variables defined here
 
 --valueOf :: Return -> Environment -> Store -> Answer
 --valueOf (Return exp1) env store = env2 --Added Exp 1 into the parathenses
