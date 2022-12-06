@@ -112,13 +112,17 @@ stmtList =
 table :: [[Operator String () (IndentT Identity) Expression]]
 table =
   [ [Infix (reservedOp "**" >> return (BinaryExpr Power)) AssocRight],
-    [Prefix (reservedOp "-" >> return (UnaryExpr Negative))],
+    [ Prefix (reservedOp "-" >> return (UnaryExpr Negative)),
+      Prefix (reservedOp "+" >> return (UnaryExpr Positive))
+    ],
     [ Infix (reservedOp "*" >> return (BinaryExpr Times)) AssocLeft,
       Infix (reservedOp "/" >> return (BinaryExpr Divide)) AssocLeft,
       Infix (reservedOp "//" >> return (BinaryExpr IntDiv)) AssocLeft,
       Infix (reservedOp "%" >> return (BinaryExpr Mod)) AssocLeft
     ],
     [ Infix (reservedOp "+" >> return (BinaryExpr Plus)) AssocLeft
+    ,
+     Infix (reservedOp "-" >> return (BinaryExpr Minus)) AssocLeft
     ],
     [ Infix (reservedOp "in" >> return (BinaryExpr In)) AssocLeft,
       Infix (reservedOp "not in" >> return (BinaryExpr NotIn)) AssocLeft,
