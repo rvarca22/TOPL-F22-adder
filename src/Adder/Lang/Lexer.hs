@@ -37,8 +37,7 @@ adderLexSpec =
       -- TODO Define the reserved names/keywords for the Adder language
       -- See https://docs.python.org/3/reference/lexical_analysis.html#keywords
       Tok.reservedNames =
-        ["from", "pass", "return", "if", "or", "and", "is", "not", "in", "not in", "is not"],
-
+        ["continue", "from", "pass", "return", "if", "or", "and", "is", "not", "in", "not in", "is not"],
       -- TODO Define the reserved operator symbols for the Adder language
       -- See https://docs.python.org/3/reference/lexical_analysis.html#operators
       Tok.opStart = Tok.opLetter adderLexSpec,

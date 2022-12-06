@@ -78,6 +78,7 @@ simpleStmt :: IParser Statement
 simpleStmt =
   (choice . map try)
     [ reserved "pass" >> return PassStmt, -- pass_stmt ::= "pass"
+      (reserved "continue" >> return ContinueStmt),
       ReturnStmt <$> (reserved "return" >> expression), -- (reserved "return" >> [Expression]) -- Attempted to make it like the IsZero expression after feedback
       -- Attempted EBNF rule return_stmt ::=  "return" [expression_list]
       AssignmentStmt
