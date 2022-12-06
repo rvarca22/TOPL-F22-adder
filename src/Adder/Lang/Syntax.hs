@@ -5,6 +5,8 @@
  -
  -  This module provides the abstract syntax representation for Adder.
  -}
+{-# OPTIONS_GHC -Wno-missing-export-lists #-}
+
 module Adder.Lang.Syntax where
 
 import Adder.Defs (Identifier)
@@ -17,17 +19,22 @@ newtype Program
 -- TODO Build out the abstract syntax for Adder statements
 data Statement
   = IfStmt Expression [Statement] -- If Statement contains Exprression and list of statements - at this time only one statement
-  | ReturnStmt Expression  -- I did this to return just an expression of any kind, so the user could use return for many purposes
+  | ReturnStmt Expression -- I did this to return just an expression of any kind, so the user could use return for many purposes
   | PassStmt
   | StmtList [Statement]
   | AssignmentStmt Identifier Expression
   | AugmentedAssignmentStmt Identifier AugOp Expression -- Bashir's Augmented Assignment constructor
+  | BreakStmt
   deriving (Show)
 
 -- TODO Build out the abstract syntax for Adder by adding more expressions
 data Expression
   = UnaryExpr UnaryOp Expression
   | BinaryExpr BinaryOp Expression Expression
+  | AtomExp Atom
+  | IntLiteralExp Integer
+  | StringLiteralExp String
+  | FloatLiteralExp Float
   deriving (Show)
 
 -- Bashir's Augment assignment operations
@@ -73,9 +80,16 @@ data ExpVal
   | StrVal String
   deriving (Eq)
 
+data Atom
+  = IdAtom Identifier
+  deriving (Show)
+  --Will need Literals
+  --Will need Enclosure
+
 -- TODO Implement "to-string" functionality for new Adder expressed values
 instance Show ExpVal where
   show (BoolVal p) = show p
   show (IntVal p) = show p
   show (FloatVal p) = show p
   show (StrVal p) = show p
+

@@ -1,0 +1,7 @@
+n = 5
+c = 3.14 * 2.0 * r
+a = 3.14 * r**2.0
+
+if True and False:
+  msg = "Hello, World!"
+  return msg

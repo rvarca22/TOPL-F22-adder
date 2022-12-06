@@ -16,6 +16,7 @@ where
 
 import Adder.Lang.Lexer
 import Adder.Lang.Syntax
+import Adder.Lang.Syntax (Atom (IdAtom))
 import Control.Monad (liftM2)
 import Data.Functor.Identity (Identity)
 import Text.Parsec hiding (parse, string)
@@ -45,7 +46,7 @@ contents p = do
 
 -- See https://docs.python.org/3/reference/toplevel_components.html#complete-python-programs
 
---block :: IParser statement -> IParser [statement]
+-- block :: IParser statement -> IParser [statement]
 
 program :: IParser Program
 program = Pgm <$> block statement
@@ -72,14 +73,12 @@ compoundStmt =
         <*> (reservedOp ":" >> suite)
     ]
 
-
-
 -- See https://docs.python.org/3/reference/simple_stmts.html#grammar-token-python-grammar-simple_stmt
 simpleStmt :: IParser Statement
 simpleStmt =
   (choice . map try)
-    [ (reserved "pass" >> return PassStmt), -- pass_stmt ::= "pass"
-      ReturnStmt <$> (reserved "return" >> expression),  -- (reserved "return" >> [Expression]) -- Attempted to make it like the IsZero expression after feedback 
+    [ reserved "pass" >> return PassStmt, -- pass_stmt ::= "pass"
+      ReturnStmt <$> (reserved "return" >> expression), -- (reserved "return" >> [Expression]) -- Attempted to make it like the IsZero expression after feedback
       -- Attempted EBNF rule return_stmt ::=  "return" [expression_list]
       AssignmentStmt
         <$> identifier
@@ -87,7 +86,8 @@ simpleStmt =
       AugmentedAssignmentStmt
         <$> identifier
         <*> augAssStmt -- parse the augmented operator here
-        <*> expression -- then parse the expression
+        <*> expression, -- then parse the expression
+      BreakStmt <$ reserved "BreakStmt"
     ]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-stmt_list
@@ -95,7 +95,7 @@ stmtList :: IParser Statement
 stmtList =
   (choice . map try)
     [ StmtList
-        <$> (sepBy simpleStmt (symbol ";"))
+        <$> sepBy simpleStmt (symbol ";")
     ]
 
 -- Implementation of modulo
@@ -121,7 +121,7 @@ table =
     ],
     [ Infix (reservedOp "in" >> return (BinaryExpr In)) AssocLeft,
       Infix (reservedOp "not in" >> return (BinaryExpr NotIn)) AssocLeft,
-      Infix (reservedOp "is" >> return (BinaryExpr Is)) AssocLeft,
+      Infix (reserved "is" >> return (BinaryExpr Is)) AssocLeft,
       Infix (reservedOp "is not" >> return (BinaryExpr IsNot)) AssocLeft,
       Infix (reservedOp "<" >> return (BinaryExpr Less)) AssocLeft,
       Infix (reservedOp "<=" >> return (BinaryExpr LessEqual)) AssocLeft,
@@ -137,19 +137,30 @@ table =
 
 -- See https://docs.python.org/3/reference/expressions.html
 expression :: IParser Expression
-expression = buildExpressionParser table atom <?> "expression"
+expression =
+  buildExpressionParser table atom
+    <?> "expression"
 
---assignment_expression ::=  [identifier ":="] expression
+-- assignment_expression ::=  [identifier ":="] expression
 assignmentExpr :: IParser Expression
-assignmentExpr = expression --For now, assignment expression only needs to be an expression
---(choice . map try)
+assignmentExpr = expression -- For now, assignment expression only needs to be an expression
+-- (choice . map try)
 --  [<$> identifier
 --    <*> (reservedOp "=" >> Expression)]
 
 -- See https://docs.python.org/3/reference/expressions.html#grammar-token-python-grammar-atom
 atom :: IParser Expression
 atom =
-  undefined
+  AtomExp . IdAtom <$> identifier
+    <|> IntLiteralExp <$> integer
+    <|> StringLiteralExp <$> string
+    <|> FloatLiteralExp <$> float
     <?> "atom"
 
-
+-- (choice . map try)
+-- [
+--   -- atom  ::=  identifier | literal | enclosure
+--   AtomExp <$> Id
+--   --AtomExp <$> literal,
+--   --AtomExp <$> enclosure
+-- ]
