@@ -49,12 +49,18 @@ resultOfProgram _ env st0 = undefined
 -- TODO Implement the semantics for each kind of Adder statement
 
 resultOf :: Statement -> Environment -> Store -> IO Store
-resultOf _ env st0 = undefined
+--resultOf _ env st0 = undefined
+
+resultOf (StmtList []) env st0 = return st0
+resultOf (StmtList (stmt : stmts)) env st0 = do
+  st1 <- resultOf stmt env st0
+  resultOf (StmtList stmts) env st1
 
 --resultOf (PassStmt) _ env st0 = env -- pass does not do anything so would env not cahgne?
 -- where
---    env = env
+--    env = env 
 
+-- resultOf (PassStmt) env st0 = resultOf PassStmt
 -- resultOf(PassStmt) env0 = env1
 ---------------------------------------------
 -- env1 = env0
