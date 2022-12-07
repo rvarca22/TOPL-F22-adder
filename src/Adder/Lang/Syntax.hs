@@ -25,6 +25,7 @@ data Statement
   | AssignmentStmt Identifier Expression
   | AugmentedAssignmentStmt Identifier AugOp Expression -- Bashir's Augmented Assignment constructor
   | BreakStmt
+  | ContinueStmt
   | WhileStmt Expression [Statement]
   deriving (Show)
 
@@ -47,8 +48,9 @@ data AugOp
     deriving (Show)
 
 data UnaryOp
-  = Not
-  | Negative
+  = Negative
+  | Positive
+  | Not
   deriving (Show)
 
 -- TODO Build out the abstract syntax for more binary operations
@@ -56,6 +58,7 @@ data BinaryOp
   = Power
   | Times
   | Plus
+  | Minus
   | In
   | NotIn
   | Is
@@ -93,4 +96,3 @@ instance Show ExpVal where
   show (IntVal p) = show p
   show (FloatVal p) = show p
   show (StrVal p) = show p
-
