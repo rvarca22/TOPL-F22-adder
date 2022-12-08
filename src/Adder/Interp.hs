@@ -59,7 +59,10 @@ type Answer = (ExpVal, Store)
 -- TODO Implement the semantics for each kind of Adder expression
 valueOf :: Expression -> Environment -> Store -> Answer
 valueOf _ env st0 = undefined
+valueOf UnaryExpr = valueOfUop ()
 
 {- Auxiliary functions -}
 -- TODO Implement any helper functions needed to simplify the design of the
 -- interpreter (e.g., the applyProcedure helper function).
+valueOfUop :: UnaryOp -> Expression -> Expression -> return (UnaryExpr)
+valueOfUop _env st0 = undefined
