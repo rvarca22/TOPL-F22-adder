@@ -49,7 +49,9 @@ adderLexSpec =
           "in",
           "not in",
           "is not",
-          "while"
+          "while",
+          "False",
+          "True"
         ],
       -- TODO Define the reserved operator symbols for the Adder language
       -- See https://docs.python.org/3/reference/lexical_analysis.html#operators

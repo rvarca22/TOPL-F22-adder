@@ -37,6 +37,7 @@ data Expression
   | IntLiteralExp Integer
   | StringLiteralExp String
   | FloatLiteralExp Float
+  | BoolLiteralExp Bool
   deriving (Show)
 
 -- Bashir's Augment assignment operations

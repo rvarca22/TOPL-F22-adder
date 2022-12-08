@@ -164,6 +164,7 @@ atom =
     <|> IntLiteralExp <$> integer
     <|> StringLiteralExp <$> string
     <|> FloatLiteralExp <$> float
+    <|> BoolLiteralExp <$> boolean
     <?> "atom"
 
 -- (choice . map try)
