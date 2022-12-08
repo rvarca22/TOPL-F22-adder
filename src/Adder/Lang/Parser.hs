@@ -148,6 +148,9 @@ assignmentExpr = expression -- For now, assignment expression only needs to be a
 --  [<$> identifier
 --    <*> (reservedOp "=" >> Expression)]
 
+varExpr :: IParser Expression
+varExpr = expression
+
 -- See https://docs.python.org/3/reference/expressions.html#grammar-token-python-grammar-atom
 atom :: IParser Expression
 atom =

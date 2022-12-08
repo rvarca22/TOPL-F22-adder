@@ -73,7 +73,11 @@ type Answer = (ExpVal, Store)
 
 -- TODO Implement the semantics for each kind of Adder expression
 valueOf :: Expression -> Environment -> Store -> Answer
-valueOf _ env st0 = undefined
+valueOf (varExp x) env st0 = Answer (deref addr st0) st0
+  where
+    addr = applyEnv env x
+
+
 
 --valueOF :: assignmentExpr ->  ??
 
