@@ -76,10 +76,10 @@ type Answer = (ExpVal, Store)
 valueOf :: Expression -> Environment -> Store -> Answer
 valueOf _ env st0 = undefined
 -- Binary Operation
-valueOf (BinaryExp op exp1 exp2) env st0 = valueOfBop op val1 val2 st2
+valueOf (BinaryExp op exp1 exp2) env st0 = valueOfBop op val1 val2
   where
-    val1 st1 = valueOf(exp1) env st0
-    val2 st2 = valueOf(exp2) env st1
+    (val1, st1) = valueOf exp1  env st0
+    (val2, st2) = valueOf exp2 env st1
 
 -- Don't forget about free store
 
@@ -91,7 +91,7 @@ valueOf (BinaryExp op exp1 exp2) env st0 = valueOfBop op val1 val2 st2
 
 valueOfBop :: BinaryOp -> ExpVal -> ExpVal -> ExpVal
 valueOfBop op val1 val2 = case op of
-  _ -> undefined
+  _ -> error "unimplemented binary operation"
   --Code here
 
 --valueOf :: Return -> Environment -> Store -> Answer
