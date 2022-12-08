@@ -58,10 +58,20 @@ statement =
     [ compoundStmt,
       stmtList
     ]
+-- this gives the option to return one statement or a list of statements
+data Statement = AResult Statement | ManyResults [Statement]
+
+-- take many results are return a list of statements if it is anything else return list
+getResults :: Statement -> [Statement] 
+getResults r = case r of (ManyResults rs) -> rs; _ -> [r]
+
+-- wrap the results in the parser
+readResultList :: IParser [Statement]
+readResultList = getResults <$> StmtList
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-suite
 suite :: IParser [Statement]
-suite = block statement <|> block stmtList
+suite = block statement <|> readResultList stmtList -- I have no idea what i am doing i am going to go to office hours tmmr
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-compound_stmt
 compoundStmt :: IParser Statement
