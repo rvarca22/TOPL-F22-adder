@@ -71,7 +71,24 @@ compoundStmt =
     -- WhileStmt ::= "while" assignmentExpr ":" suite
     [ IfStmt
         <$> (reserved "if" >> assignmentExpr)
-        <*> (reservedOp ":" >> suite),
+        <*> (reservedOp ":" >> suite)
+      IfElseStmt
+        <$> (reserved "if" >> assignmentExpr)
+        <*> (reservedOp ":" >> suite)
+        <*> (reserved "else")
+        <*> (reservedOp ":" >> suite)
+      IfElifStmt
+        <$> (reserved "if" >> assignmentExpr)
+        <*> (reservedOp ":" >> suite)
+        <*> (reserved "elif" >> assignmentExpr)
+        <*> (reservedOp ":" >> suite)
+      IfElifElseStmt
+        <$> (reserved "if" >> assignmentExpr)
+        <*> (reservedOp ":" >> suite)
+        <*> (reserved "elif" >> assignmentExpr)
+        <*> (reservedOp ":" >> suite)
+        <*> (reserved "else")
+        <*> (reservedOp ":" >> suite)
       WhileStmt
         <$> (reserved "while" >> assignmentExpr)
         <*> (reservedOp ":" >> suite)

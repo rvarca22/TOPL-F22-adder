@@ -59,11 +59,35 @@ resultOf _ env st0 = undefined
 ---------------------------------------------
 -- env1 = env0
 {-
-resultOf (IfStmt test conseq) p st = if q then st2 else st3
+resultOf (IfStmt test conseq) p st = if q then st2
+  where
+    Answer (BoolVal q) st1 = valueOf test p st
+    st2 = resultOf conseq p st1
+-}
+
+{-
+resultOf (IfElseStmt test conseq) p st = if q then st2 else st3
   where
     Answer (BoolVal q) st1 = valueOf test p st
     st2 = resultOf conseq p st1
     st3 = resultOf conseq p st2
+-}
+
+resultOf (IfElifStmt test conseq) p st = if q then st2 then if r then st4
+  where
+    Answer (BoolVal q) st1 = valueOf test p st
+    st2 = resultOf conseq p st1
+    Answer (BoolVal r) st3 = valueOf test r st
+    st4 = resultOf conseq p st3
+-}
+
+resultOf (IfElifElseStmt test conseq) p st = if q then st2 then if r then st4 else st5
+  where
+    Answer (BoolVal q) st1 = valueOf test p st
+    st2 = resultOf conseq p st1
+    Answer (BoolVal r) st3 = valueOf test r st
+    st4 = resultOf conseq p st3
+    st5 = resultOf conseq p st4
 -}
 
 {- Evaluating a program yields an "answer" - a value and a resulting state. -}
