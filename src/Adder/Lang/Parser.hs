@@ -59,9 +59,13 @@ statement =
       stmtList
     ]
 
+-- getStatements is used to return the list of Statements that are in a stmtList
+getStatements  :: Statement -> [Statement]
+getStatements  r = case r of (StmtList rs) -> rs; _ -> [r]
+
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-suite
 suite :: IParser [Statement]
-suite = undefined
+suite = block statement <|> getStatements <$> stmtList
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-compound_stmt
 compoundStmt :: IParser Statement
