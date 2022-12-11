@@ -75,6 +75,12 @@ type Answer = (ExpVal, Store)
 valueOf :: Expression -> Environment -> Store -> Answer
 valueOf _ env st0 = undefined
 
+-- Unary Operation - does this need to be here?
+-- valueOf (UnaryExpr op st0) ρ = valueOfUop op st0 ρ
+--  where
+--    st0 = valueOf
+
+
 --valueOF :: assignmentExpr ->  ??
 
 {- Auxiliary functions -}
@@ -89,3 +95,11 @@ valueOf _ env st0 = undefined
 -- valueOf(Return exp1)env = env1 exp2
 ---------------------------------------------
 -- valueOf(exp1)env = env1 exp2
+
+valueOfUop :: UnaryOp -> Exp -> Environment -> ExpVal
+valueOfUop op exp ρ = case op of
+  -- Finish me!
+  Positive -> BoolVal (n > 0)
+  Negative -> BoolVal (n < 0)
+  where
+      n = valueOf exp ρ

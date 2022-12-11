@@ -137,7 +137,12 @@ table =
 -- See https://docs.python.org/3/reference/expressions.html
 expression :: IParser Expression
 expression = buildExpressionParser table atom <?> "expression"
-
+    [
+      TrueExp
+        <$ reserved "true",
+      FalseExp
+        <$ reserved "false"
+    ]
 -- assignment_expression ::=  [identifier ":="] expression
 assignmentExpr :: IParser Expression
 assignmentExpr = expression -- For now, assignment expression only needs to be an expression
