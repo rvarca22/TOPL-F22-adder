@@ -50,12 +50,12 @@ resultOfProgram _ env st0 = undefined
 -- TODO Implement the semantics for each kind of Adder statement
 
 resultOf :: Statement -> Environment -> Store -> IO Store
-resultOf _ env st0 = undefined
 resultOf (StmtList []) env st0 = return st0
 resultOf (StmtList (stmt : stmts)) env st0 = do
   st1 <- resultOf stmt env st0
   resultOf (StmtList stmts) env st1
 resultOf (PassStmt) env st = return st
+resultOf _ env st0 = undefined
 
 {-
 resultOf (IfStmt test conseq) p st = if q then st2 else st3
