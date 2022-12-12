@@ -75,6 +75,10 @@ type Answer = (ExpVal, Store)
 valueOf :: Expression -> Environment -> Store -> Answer
 valueOf _ env st0 = undefined
 
+resultOf (WhileStmt test conseq) p st = while q st2
+  where
+    Answer (BoolVal q) st1 = valueOf test p st2
+
 --valueOF :: assignmentExpr ->  ??
 
 {- Auxiliary functions -}
