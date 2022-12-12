@@ -73,12 +73,9 @@ type Answer = (ExpVal, Store)
 
 -- TODO Implement the semantics for each kind of Adder expression
 valueOf :: Expression -> Environment -> Store -> Answer
-valueOf _ env st0 = undefined
-
--- Unary Operation - does this need to be here?
--- valueOf (UnaryExpr op st0) ρ = valueOfUop op st0 ρ
---  where
---    st0 = valueOf
+valueOf (UnaryExpr op exp) env st0 = do   -- Helper function to check each unary op, and return
+  let (expVal, st1) = valueOf exp env st0 -- correct values
+  return (valueOfUop op expVal, st1)
 
 
 --valueOF :: assignmentExpr ->  ??
@@ -90,16 +87,28 @@ valueOf _ env st0 = undefined
 
 --valueOf :: Return -> Environment -> Store -> Answer
 --valueOf (Return exp1) env store = env2 --Added Exp 1 into the parathenses
---Answer Return exp1 env = exp1         --Attempted to add the return statement 
+--Answer Return exp1 env = exp1         --Attempted to add the return statement
 
 -- valueOf(Return exp1)env = env1 exp2
 ---------------------------------------------
 -- valueOf(exp1)env = env1 exp2
 
+
+-- Logical Negation:
+--   1.  not True  -->  False
+--   2.  not False -->  True
+
+-- Positive and Negative can be expressed as:
+--   1.  abs x, where x > 0  -->  x
+--   2.  abs x, where x < 0  -->  -x
+--   3.  abs 0                -->  0
+
 valueOfUop :: UnaryOp -> Exp -> Environment -> ExpVal
-valueOfUop op exp ρ = case op of
-  -- Finish me!
-  Positive -> BoolVal (n > 0)
-  Negative -> BoolVal (n < 0)
+valueOfUop op exp st0 = case op of
+  Negative -> negate exp st0
+  Positive -> exp st0
+  Not -> not exp st0
+  Factorial -> product [1..st0] -- An attempt at factorial, if implemented
+  _ -> undefined -- For all other operators
   where
-      n = valueOf exp ρ
+      n = valueOf exp st0
