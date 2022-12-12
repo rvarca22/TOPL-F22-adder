@@ -66,13 +66,13 @@ resultOf (IfStmt test conseq) p st = if q then st2
     st2 = resultOf conseq p st1
 -}
 
-{-
-resultOf (IfElseStmt test conseq) p st = if q then st2 else st3
+
+resultOf (IfElseStmt [exp1] [exp2] [exp3]) p st = if q then st2 else st3
   where
-    Answer (BoolVal q) st1 = valueOf test p st
-    st2 = resultOf conseq p st1
-    st3 = resultOf conseq p st2
--}
+    (BoolVal q, st1) = valueOf exp1 p st
+    st2 = resultOf exp2 p st2
+    st1 = resultOf exp3 p st3
+
 
 resultOf (IfElifStmt test conseq) p st = if q then st2 then if r then st4
   where
