@@ -51,11 +51,11 @@ resultOfProgram _ env st0 = undefined
 resultOf :: Statement -> Environment -> Store -> IO Store
 resultOf _ env st0 = undefined
 
-resultOf (AssignmentStmt x body) env st0 = return rhs enva -- need to have a parameter name for the Store on the left side
+resultOf (AssignmentStmt var rhs) env st0 = return st2 -- need to have a parameter name for the Store on the left side
   where
-    (addr, st1) = newref body st0
-    env1 = extendEnv x env addr-- need to provide an address that the variable is mapped to
-    x = valueOf rhs env st 0  -- valueOf takes a Store parameter also
+    (addr, st1) = valueOf rhs env st0
+    env1 = extendEnv addr var env-- need to provide an address that the variable is mapped to
+    st2 = setref rhs addr st1  -- valueOf takes a Store parameter also
 
 --valueOf (Return exp1) env store = env2 --Added Exp 1 into the parathenses
 --Answer Return exp1 env = exp1         --Attempted to add the return statement 
@@ -90,11 +90,11 @@ valueOf _ env st0 = undefined
 
  -- need to have a parameter name for the Store on the left side
  -- on the right side, you need to just have a pair of value and store
-valueOf (AssignmentExpr x body) env st0 = rhs st2
+valueOf (AssignmentExpr var rhs) env st0 = rhs st1
   where
-    (addr, st1) = newref v st0
-    env1 = extendEnv x env addr -- need to provide an address that the variable is mapped to
-    x = valueOf rhs env st0 -- need to pass in a Store parameter here also
+    (addr, st1) = valueOf exp1 env st0
+    env1 = extendEnv var addr env -- need to provide an address that the variable is mapped to
+    st2 = setref rhs addr st1 -- need to pass in a Store parameter here also
 
 --valueOF :: assignmentExpr ->  ??
 
