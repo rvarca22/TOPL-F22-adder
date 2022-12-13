@@ -91,7 +91,17 @@ valueOf (BinaryExp op exp1 exp2) env st0 = valueOfBop op val1 val2
 
 valueOfBop :: BinaryOp -> ExpVal -> ExpVal -> ExpVal
 valueOfBop op val1 val2 = case op of
+  Mod -> case (val1, val2) of
+    (IntVal n1, IntVal n2) -> IntVal(n1 `mod` n2)
+    (IntVal n1, FloatVal n2) -> FloatVal(n1 `mod` n2)
+    (FloatVal n1, IntVal n2) -> FloatVal(n1 `mod` n2)
+    (FloatVal n1, FloatVal n2) -> FloatVal(n1 `mod` n2)
+    (StringVal n1, StringVal n2) -> undefined
+  Divide -> FloatVal(n1 `div` n2)
   _ -> error "unimplemented binary operation"
+  where
+    n1 = expvalToNum val1
+    n2 = expvalToNum val2
   --Code here
 
 --valueOf :: Return -> Environment -> Store -> Answer
