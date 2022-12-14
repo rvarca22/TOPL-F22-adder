@@ -24,7 +24,6 @@ import Adder.Lang.Syntax (Expression (..), Program (..), Statement (..))
 import Adder.Store (Store, deref, emptyStore, newref, setref)
 import Data.Either (fromRight)
 import Prelude hiding (exp)
-import GHC.Base (undefined)
 
 type Interpreter a = a -> Environment -> Store -> IO Store
 
@@ -73,15 +72,18 @@ type Answer = (ExpVal, Store)
 {- semantic reductions for expressions -}
 
 -- TODO Implement the semantics for each kind of Adder expression
-valueOf :: Expression -> Environment -> Store -> Answer
-valueOf _ env st0 = undefined
+
 -- Binary Operation
-valueOf (BinaryExp op exp1 exp2) env st0 = valueOfBop op val1 val2
+-- Don't forget about free store
+
+valueOf (BinaryExpr op exp1 exp2) env st0 = valueOfBop op val1 val2
   where
     (val1, st1) = valueOf exp1  env st0
     (val2, st2) = valueOf exp2 env st1
 
--- Don't forget about free store
+valueOf :: Expression -> Environment -> Store -> Answer
+valueOf _ env st0 = undefined
+
 
 --valueOF :: assignmentExpr ->  ??
 
@@ -89,7 +91,7 @@ valueOf (BinaryExp op exp1 exp2) env st0 = valueOfBop op val1 val2
 -- TODO Implement any helper functions needed to simplify the design of the
 -- interpreter (e.g., the applyProcedure helper function).
 
-valueOfBop :: BinaryOp -> ExpVal -> ExpVal -> ExpVal
+valueOfBop :: Answer -> ExpVal -> ExpVal -> ExpVal
 valueOfBop op val1 val2 = case op of
   _ -> error "unimplemented binary operation"
   --Code here
