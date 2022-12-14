@@ -20,7 +20,7 @@ import Adder.DataStructures (DenVal, Environment, ExpVal (..), Function (..))
 import Adder.Defs (Source)
 import Adder.Environment (Env (..))
 import Adder.Lang.Parser (ParseError, parseFile, parseInteractive)
-import Adder.Lang.Syntax (Expression (..), Program (..), Statement (..))
+import Adder.Lang.Syntax (Expression (..), Program (..), Statement (..), ExpVal (BoolVal))
 import Adder.Store (Store, deref, emptyStore, newref, setref)
 import Data.Either (fromRight)
 import GHC.Base (undefined)
@@ -57,37 +57,43 @@ resultOf (StmtList (stmt : stmts)) env st0 = do
 resultOf (PassStmt) env st = return st
 resultOf _ env st0 = undefined
 
-{-
-resultOf (IfStmt test conseq) p st = if q then st2
+resultOfStmts :: [Statement] -> Environment -> Store -> IO Store
+resultOfStmts [] p st1 = return st1
+resultOfStmts (stmt : stmts) p st1 = do
+  st2 <- resultOf stmt p st1
+  resultOfStmts stmts p st2
+
+
+resultOf (IfStmt exp1 stmt1) p st = if q then val2
   where
-    Answer (BoolVal q) st1 = valueOf test p st
-    st2 = resultOf conseq p st1
--}
+    (BoolVal q, st) = valueOf exp1 p st
+    s1 = resultOfStmts stmt1 p val2
 
 
-resultOf (IfElseStmt [exp1] [exp2] [exp3]) p st = if q then st2 else st3
+
+resultOf (IfElseStmt exp1 trueStmts falseStmts) p st = if q then val2 else val3
   where
-    (BoolVal q, st1) = valueOf exp1 p st
-    st2 = resultOf exp2 p st2
-    st1 = resultOf exp3 p st3
+    (BoolVal q, st) = valueOf exp1 p st
+    s1 = resultOfStmts trueStmts p val2
+    s2 = resultOfStmts falseStmts p val3
 
 
-resultOf (IfElifStmt test conseq) p st = if q then st2 then if r then st4
+resultOf (IfElifStmt exp1 stmt1 exp2 stmt2) p st = if q1 then val2 else if q2 then val4
   where
-    Answer (BoolVal q) st1 = valueOf test p st
-    st2 = resultOf conseq p st1
-    Answer (BoolVal r) st3 = valueOf test r st
-    st4 = resultOf conseq p st3
--}
+    (BoolVal q1, st) = valueOf exp1 p st
+    s1 = resultOfStmts stmt1 p val2
+    (BoolVal q2, st) = valueOf exp2 p st
+    s2 = resultOfStmts p val4
 
-resultOf (IfElifElseStmt test conseq) p st = if q then st2 then if r then st4 else st5
+
+resultOf (IfElifElseStmt exp1 stmt1 exp2 stmt2 stmt3) p st = if q1 then val2 else if q2 then val4 else val5
   where
-    Answer (BoolVal q) st1 = valueOf test p st
-    st2 = resultOf conseq p st1
-    Answer (BoolVal r) st3 = valueOf test r st
-    st4 = resultOf conseq p st3
-    st5 = resultOf conseq p st4
--}
+    (BoolVal q1, st1) = valueOf exp1 p st
+    s1 = resultOfStmts stmt1 p val2
+    (BoolVal q2, st2) = valueOf exp2 p st
+    s2 = resultOfStmts stmt2 p val4
+    s3 = resultOfStmts stmt3 p val5
+
 
 {- Evaluating a program yields an "answer" - a value and a resulting state. -}
 type Answer = (ExpVal, Store)
@@ -96,6 +102,7 @@ type Answer = (ExpVal, Store)
 
 -- TODO Implement the semantics for each kind of Adder expression
 valueOf :: Expression -> Environment -> Store -> Answer
+
 valueOf _ env st0 = undefined
 -- Binary Operation
 --valueOf (BinaryExp op exp1 exp2) env st0 = valueOfBop op val1 val2
