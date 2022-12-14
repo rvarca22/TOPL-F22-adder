@@ -20,7 +20,7 @@ import Adder.DataStructures (DenVal, Environment, ExpVal (..), Function (..))
 import Adder.Defs (Source)
 import Adder.Environment (Env (..))
 import Adder.Lang.Parser (ParseError, parseFile, parseInteractive)
-import Adder.Lang.Syntax (Expression (..), Program (..), Statement (..))
+import Adder.Lang.Syntax (Expression (..), Program (..), Statement (..), BinaryOp (..))
 import Adder.Store (Store, deref, emptyStore, newref, setref)
 import Data.Either (fromRight)
 import Prelude hiding (exp)
@@ -74,7 +74,7 @@ type Answer = (ExpVal, Store)
 -- Binary Operation
 -- Don't forget about free store
 
-valueOf (BinaryExpr op exp1 exp2) env st0 = valueOfBop op val1 val2
+valueOf (BinaryExpr op exp1 exp2) env st0 = valueOfBop st2
   where
     (val1, st1) = valueOf exp1  env st0
     (val2, st2) = valueOf exp2 env st1
@@ -89,7 +89,7 @@ valueOf _ env st0 = undefined
 -- TODO Implement any helper functions needed to simplify the design of the
 -- interpreter (e.g., the applyProcedure helper function).
 
-valueOfBop :: Answer -> ExpVal -> ExpVal -> ExpVal
+valueOfBop :: BinaryOp -> ExpVal -> ExpVal -> ExpVal
 valueOfBop op val1 val2 = case op of
   _ -> error "unimplemented binary operation"
   --Code here
