@@ -75,7 +75,7 @@ valueOf :: Expression -> Environment -> Store -> Answer
 valueOf _ env st0 = undefined
 
 -- Binary Operation
--- Don't forget about free store
+-- Don't forget about free store.
 
 valueOf (BinaryExpr op exp1 exp2) env st0 = valueOfBop op val1 val2
   where
