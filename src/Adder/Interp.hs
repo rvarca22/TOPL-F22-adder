@@ -51,6 +51,15 @@ resultOfProgram _ env st0 = undefined
 resultOf :: Statement -> Environment -> Store -> IO Store
 resultOf _ env st0 = undefined
 
+resultOf (WhileStmt test conseq) p st0 = 
+  if q
+    then do 
+      st2 <- resultOf body p st1
+      resultOf stmt p st2
+    else return st1
+  where
+    (BoolVal q) st1 = valueOf test p st0
+
 --resultOf (PassStmt) _ env st0 = env -- pass does not do anything so would env not cahgne?
 -- where
 --    env = env
@@ -74,10 +83,6 @@ type Answer = (ExpVal, Store)
 -- TODO Implement the semantics for each kind of Adder expression
 valueOf :: Expression -> Environment -> Store -> Answer
 valueOf _ env st0 = undefined
-
-resultOf (WhileStmt test conseq) p st = while q st2
-  where
-    Answer (BoolVal q) st1 = valueOf test p st2
 
 --valueOF :: assignmentExpr ->  ??
 
