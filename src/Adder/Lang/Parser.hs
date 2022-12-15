@@ -22,6 +22,7 @@ import Data.Functor.Identity (Identity)
 import Text.Parsec hiding (parse, string)
 import Text.Parsec.Expr
 import Text.Parsec.Indent
+import HOPL.IMPLICIT_REFS.Lang.Lexer (reservedOp)
 
 parseFile :: String -> Either ParseError Program
 parseFile = parse (contents program) "<stdin>"
@@ -75,7 +76,10 @@ compoundStmt =
     -- WhileStmt ::= "while" assignmentExpr ":" suite
     [ IfStmt
         <$> (reserved "if" >> assignmentExpr)
-        <*> (reservedOp ":" >> suite),
+        <*> (reservedOp ":" >> suite)
+        -- <*> (reservedOp "elif" >> assignmentExpr)
+        -- <*> (reservedOp ":" >> suite)
+        -- <*> (reservedOp "else" >> reservedOp ":" >> suite),
       WhileStmt
         <$> (reserved "while" >> assignmentExpr)
         <*> (reservedOp ":" >> suite)
