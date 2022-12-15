@@ -20,7 +20,7 @@ import Adder.DataStructures (DenVal, Environment, ExpVal (..), Function (..))
 import Adder.Defs (Source)
 import Adder.Environment (Env (..))
 import Adder.Lang.Parser (ParseError, parseFile, parseInteractive)
-import Adder.Lang.Syntax (Expression (..), Program (..), Statement (..))
+import Adder.Lang.Syntax (Expression (..), Program (..), Statement (..), BinaryOp (And))
 import Adder.Store (Store, deref, emptyStore, newref, setref)
 import Data.Either (fromRight)
 import GHC.Base (undefined)
@@ -87,11 +87,18 @@ valueOf _ env st0 = undefined
 -- TODO Implement any helper functions needed to simplify the design of the
 -- interpreter (e.g., the applyProcedure helper function).
 
---valueOfBop :: BinaryOp -> ExpVal -> ExpVal -> ExpVal
---valueOfBop op val1 val2 = case op of
+
 --  _ -> error "unimplemented binary operation"
 --Code here
-
+valueOfBop :: BinaryOp -> ExpVal -> ExpVal -> ExpVal
+valueOfBop op val1 val2 = case op of
+  And -> BoolVal (x1 && x2)
+  Or -> BoolVal (m1 && m2)
+  where
+    x1 = Bool y1
+    x2 = Bool y2
+    m1 = Bool n1
+    m2 = Bool n2
 --valueOf :: Return -> Environment -> Store -> Answer
 --valueOf (Return exp1) env store = env2 --Added Exp 1 into the parathenses
 --Answer Return exp1 env = exp1         --Attempted to add the return statement
