@@ -87,10 +87,10 @@ valueOf _ env st0 = undefined
 -- Binary Operation
 -- Don't forget about free store.
 
-valueOf (BinaryExpr op exp1 exp2) env st0 = valueOfBop op val1 val2
-  where
-    (val1, st1) = valueOf exp1  env st0
-    (val2, st2) = valueOf exp2 env st1
+-- valueOf (BinaryExpr op exp1 exp2) env st0 = valueOfBop op val1 val2
+--   where
+--     (val1, st1) = valueOf exp1  env st0
+--     (val2, st2) = valueOf exp2 env st1
 
 
 --valueOF :: assignmentExpr ->  ??
