@@ -97,3 +97,10 @@ instance Show ExpVal where
   show (IntVal p) = show p
   show (FloatVal p) = show p
   show (StrVal p) = show p
+
+expvalToFloat :: ExpVal -> Float
+valueOf val -> case val of
+  IntVal val -> fromInteger val :: Float
+  FloatVal val -> val
+  StrVal val -> "This value cannot be converted to a float"
+  BoolVal val -> "This value cannot be converted to a float"
