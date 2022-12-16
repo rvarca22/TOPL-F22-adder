@@ -103,12 +103,14 @@ valueOf (UnaryExpr op exp) env st0 = do   -- Helper function to check each unary
 --   2.  abs x, where x < 0  -->  -x
 --   3.  abs 0                -->  0
 
-valueOfUop :: UnaryOp -> Exp -> Environment -> ExpVal
+valueOfUop :: UnaryOp -> Expression -> Environment -> ExpVal
 valueOfUop op exp st0 = case op of
-  Negative -> negate exp st0
-  Positive -> exp st0
-  Not -> not exp st0
-  Factorial -> product [1..st0] -- An attempt at factorial, if implemented
-  _ -> undefined -- For all other operators
-  where
-      n = valueOf exp st0
+  Negative -> case valueOf exp st0 of
+    IntVal n -> IntVal (negate n)
+    BoolVal b -> error "Invalid operand for unary operator '-'"
+  Positive -> case valueOf exp st0 of
+    IntVal n -> IntVal n
+    BoolVal b -> error "Invalid operand for unary operator '+'"
+  Not -> case valueOf exp st0 of
+    IntVal n -> error "Invalid operand for unary operator 'not'"
+    BoolVal b -> BoolVal (not b)

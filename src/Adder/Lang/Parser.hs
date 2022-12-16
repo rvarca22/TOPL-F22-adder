@@ -22,6 +22,9 @@ import Text.Parsec hiding (parse, string)
 import Text.Parsec.Expr
 import Text.Parsec.Indent
 
+-- Data type for boolean expressions
+data BoolExpr = TrueExp | FalseExp
+
 parseFile :: String -> Either ParseError Program
 parseFile = parse (contents program) "<stdin>"
 
@@ -137,12 +140,7 @@ table =
 -- See https://docs.python.org/3/reference/expressions.html
 expression :: IParser Expression
 expression = buildExpressionParser table atom <?> "expression"
-    [
-      TrueExp
-        <$ reserved "true",
-      FalseExp
-        <$ reserved "false"
-    ]
+
 -- assignment_expression ::=  [identifier ":="] expression
 assignmentExpr :: IParser Expression
 assignmentExpr = expression -- For now, assignment expression only needs to be an expression
