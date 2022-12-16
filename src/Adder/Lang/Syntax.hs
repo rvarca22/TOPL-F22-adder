@@ -92,8 +92,9 @@ data Atom
   --Will need Enclosure
 
 -- TODO Implement "to-string" functionality for new Adder expressed values
-instance Show ExpVal where
+instance Show ExpVal where 
+  show (FloatVal p) = show p
   show (BoolVal p) = show p
   show (IntVal p) = show p
-  show (FloatVal p) = show p
   show (StrVal p) = show p
+  

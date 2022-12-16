@@ -165,11 +165,12 @@ assignmentExpr = expression -- For now, assignment expression only needs to be a
 atom :: IParser Expression
 atom =
   AtomExp . IdAtom <$> identifier
+    <|> FloatLiteralExp <$> float
     <|> IntLiteralExp <$> integer
     <|> StringLiteralExp <$> string
-    <|> FloatLiteralExp <$> float
     <|> BoolLiteralExp <$> boolean
     <?> "atom"
+    
 
 -- (choice . map try)
 -- [
