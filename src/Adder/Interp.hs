@@ -132,10 +132,20 @@ valueOf _ env st0 = undefined
 -- TODO Implement any helper functions needed to simplify the design of the
 -- interpreter (e.g., the applyProcedure helper function).
 
---valueOfBop :: BinaryOp -> ExpVal -> ExpVal -> ExpVal
---valueOfBop op val1 val2 = case op of
---  _ -> error "unimplemented binary operation"
---Code here
+valueOfBop :: BinaryOp -> ExpVal -> ExpVal -> ExpVal
+valueOfBop op val1 val2 = case op of
+  Mod -> case (val1, val2) of
+    (IntVal n1, IntVal n2) -> IntVal(n1 `mod` n2)
+    (IntVal n1, FloatVal n2) -> FloatVal(n1 `mod` n2)
+    (FloatVal n1, IntVal n2) -> FloatVal(n1 `mod` n2)
+    (FloatVal n1, FloatVal n2) -> FloatVal(n1 `mod` n2)
+    _ -> undefined
+  Divide -> FloatVal(n1 `div` n2)
+  _ -> error "unimplemented binary operation"
+  where
+    n1 = expvalToFloat val1
+    n2 = expvalToFloat val2
+  --Code here
 
 --valueOf :: Return -> Environment -> Store -> Answer
 --valueOf (Return exp1) env store = env2 --Added Exp 1 into the parathenses
