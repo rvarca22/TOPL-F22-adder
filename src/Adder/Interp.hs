@@ -96,7 +96,7 @@ valueOfBop op val1 val2 = case op of
     (IntVal n1, FloatVal n2) -> FloatVal(n1 `mod` n2)
     (FloatVal n1, IntVal n2) -> FloatVal(n1 `mod` n2)
     (FloatVal n1, FloatVal n2) -> FloatVal(n1 `mod` n2)
-    (StrVal n1, StrVal n2) -> undefined
+    _ -> undefined
   Divide -> FloatVal(n1 `div` n2)
   _ -> error "unimplemented binary operation"
   where
