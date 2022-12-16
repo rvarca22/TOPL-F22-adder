@@ -25,6 +25,7 @@ import Adder.Store (Store, deref, emptyStore, newref, setref)
 import Data.Either (fromRight)
 import GHC.Base (undefined)
 import Prelude hiding (exp)
+import GHC.Float (stgWord32ToFloat)
 
 type Interpreter a = a -> Environment -> Store -> IO Store
 
@@ -64,35 +65,35 @@ resultOfStmts (stmt : stmts) p st1 = do
   resultOfStmts stmts p st2
 
 
-resultOf (IfStmt exp1 stmt1) p st = if q then val2
+resultOf (IfStmt exp1 stmt1) p st0 = if q then st2 else st0
   where
-    (BoolVal q, st) = valueOf exp1 p st
-    s1 = resultOfStmts stmt1 p val2
+    (BoolVal q, st1) = valueOf exp1 p st0
+    st2 = resultOfStmts stmt1 p st1
 
 
 
-resultOf (IfElseStmt exp1 trueStmts falseStmts) p st = if q then val2 else val3
+resultOf (IfElseStmt exp1 trueStmts falseStmts) p st0 = if q then st2 else st3
   where
-    (BoolVal q, st) = valueOf exp1 p st
-    s1 = resultOfStmts trueStmts p val2
-    s2 = resultOfStmts falseStmts p val3
+    (BoolVal q, st1) = valueOf exp1 p st0
+    st2 = resultOfStmts trueStmts p st1
+    st3 = resultOfStmts falseStmts p st1
 
 
-resultOf (IfElifStmt exp1 stmt1 exp2 stmt2) p st = if q1 then val2 else if q2 then val4
+resultOf (IfElifStmt exp1 stmt1 exp2 stmt2) p st0 = if q1 then st2 else if q2 then st4 else st0
   where
-    (BoolVal q1, st) = valueOf exp1 p st
-    s1 = resultOfStmts stmt1 p val2
-    (BoolVal q2, st) = valueOf exp2 p st
-    s2 = resultOfStmts p val4
+    (BoolVal q1, st1) = valueOf exp1 p st0
+    st2 = resultOfStmts stmt1 p st1
+    (BoolVal q2, st3) = valueOf exp2 p st0
+    st4 = resultOfStmts p st3
 
 
-resultOf (IfElifElseStmt exp1 stmt1 exp2 stmt2 stmt3) p st = if q1 then val2 else if q2 then val4 else val5
+resultOf (IfElifElseStmt exp1 stmt1 exp2 stmt2 stmt3) p st0 = if q1 then st2 else if q2 then st4 else st5
   where
-    (BoolVal q1, st1) = valueOf exp1 p st
-    s1 = resultOfStmts stmt1 p val2
-    (BoolVal q2, st2) = valueOf exp2 p st
-    s2 = resultOfStmts stmt2 p val4
-    s3 = resultOfStmts stmt3 p val5
+    (BoolVal q1, st1) = valueOf exp1 p st0
+    st2 = resultOfStmts stmt1 p st1
+    (BoolVal q2, st3) = valueOf exp2 p st0
+    st4 = resultOfStmts stmt2 p st3
+    st5 = resultOfStmts stmt3 p st3
 
 
 {- Evaluating a program yields an "answer" - a value and a resulting state. -}
