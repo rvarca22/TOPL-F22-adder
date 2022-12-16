@@ -59,7 +59,30 @@ type Answer = (ExpVal, Store)
 -- TODO Implement the semantics for each kind of Adder expression
 valueOf :: Expression -> Environment -> Store -> Answer
 valueOf _ env st0 = undefined
-
+valueOf (LessExp exp₁ exp₂) env st0 = BoolVal (n₁ < n₂)
+  where
+    n₁ = valueOf exp₁ env st0  
+    n₂ = valueOf exp₂ env st0
+valueOf (LessEqualExp exp₁ exp₂) env st0 = BoolVal (n₁ <= n₂)
+  where
+    n₁ = valueOf exp₁ env st0  
+    n₂ = valueOf exp₂ env st0
+valueOf (EqualExp exp₁ exp₂) env st0 = BoolVal (n₁ == n₂)
+  where
+    n₁ = valueOf exp₁ env st0  
+    n₂ = valueOf exp₂ env st0
+valueOf (NotEqualExp exp₁ exp₂) env st0 = BoolVal (n₁ /= n₂)
+  where
+    n₁ = valueOf exp₁ env st0  
+    n₂ = valueOf exp₂ env st0
+valueOf (IsExp exp₁ exp₂) env st0 = BoolVal (n₁ == n₂)
+  where
+    n₁ = valueOf exp₁ env st0  
+    n₂ = valueOf exp₂ env st0
+valueOf (IsNotExp exp₁ exp₂) env st0 = BoolVal (n₁ /= n₂)
+  where
+    n₁ = valueOf exp₁ env st0  
+    n₂ = valueOf exp₂ env st0
 {- Auxiliary functions -}
 -- TODO Implement any helper functions needed to simplify the design of the
 -- interpreter (e.g., the applyProcedure helper function).
