@@ -20,11 +20,11 @@ import Adder.DataStructures (DenVal, Environment, ExpVal (..), Function (..))
 import Adder.Defs (Source)
 import Adder.Environment (Env (..))
 import Adder.Lang.Parser (ParseError, parseFile, parseInteractive)
-import Adder.Lang.Syntax (ExpVal(..), Expression (..), Program (..), Statement (..))
+import Adder.Lang.Syntax (Expression (..), Program (..), Statement (..), ExpVal(..), AugOp(..), Atom (..))
 import Adder.Store (Store, deref, emptyStore, newref, setref)
 import Data.Either (fromRight)
-import Prelude hiding (exp)
 import GHC.Base (undefined)
+import Prelude hiding (exp)
 
 type Interpreter a = a -> Environment -> Store -> IO Store
 
@@ -50,15 +50,53 @@ resultOfProgram _ env st0 = undefined
 -- TODO Implement the semantics for each kind of Adder statement
 
 resultOf :: Statement -> Environment -> Store -> IO Store
+resultOf (StmtList []) env st0 = return st0
+resultOf (StmtList (stmt : stmts)) env st0 = do
+  st1 <- resultOf stmt env st0
+  resultOf (StmtList stmts) env st1
+resultOf (PassStmt) env st = return st
+resultOf (AugmentedAssignmentStmt var AugPlus rhs) env st0 = return st2
+  where
+    address1 = applyEnv env var
+    IntVal (rval1) = deref address1 st0
+    (IntVal (rval2), st1) = valueOf rhs env st0
+    rval3 = IntVal ( rval1 +  rval2)
+    st2 = setref address1 rval3 st1
+
+--resultOf (AugmentedAssignmentStmt var AugPlus rhs) env st0 = return st2
+--  where
+--    address1 = applyEnv env var
+--    rval1 = deref address1 st0
+--    (rval2, st1) = valueOf rhs env st0
+--    rval3 = case (rval1, rval2) of
+--        (Intval n1, IntVal n2) -> IntVal (n1 + n2)
+--    st2 = setref address1 rval3 st1
+
+resultOf (AugmentedAssignmentStmt var AugMinus rhs) env st0 = return st2
+  where
+    address1 = applyEnv env var
+    IntVal (rval1) = deref address1 st0
+    (IntVal (rval2), st1) = valueOf rhs env st0
+    rval3 = IntVal ( rval1 -  rval2)
+    st2 = setref address1 rval3 st1
+
+resultOf (AugmentedAssignmentStmt var AugMulti rhs) env st0 = return st2
+  where
+    address1 = applyEnv env var
+    IntVal (rval1) = deref address1 st0
+    (IntVal (rval2), st1) = valueOf rhs env st0
+    rval3 = IntVal ( rval1 *  rval2)
+    st2 = setref address1 rval3 st1
+
+resultOf (AugmentedAssignmentStmt var AugDiv rhs) env st0 = return st2
+  where
+    address1 = applyEnv env var
+    IntVal (rval1) = deref address1 st0
+    (IntVal (rval2), st1) = valueOf rhs env st0
+    rval3 = IntVal (div rval1 rval2) -- floor and frominteger
+    st2 = setref address1 rval3 st1
 resultOf _ env st0 = undefined
 
---resultOf (PassStmt) _ env st0 = env -- pass does not do anything so would env not cahgne?
--- where
---    env = env
-
--- resultOf(PassStmt) env0 = env1
----------------------------------------------
--- env1 = env0
 {-
 resultOf (IfStmt test conseq) p st = if q then st2 else st3
   where
@@ -72,14 +110,19 @@ type Answer = (ExpVal, Store)
 
 {- semantic reductions for expressions -}
 
+
 -- TODO Implement the semantics for each kind of Adder expression
 valueOf :: Expression -> Environment -> Store -> Answer
+valueOf (AtomExp (IdAtom var)) env st0 = ((deref addr st0), st0)
+  where
+    addr = applyEnv env var
+
 valueOf _ env st0 = undefined
 -- Binary Operation
-valueOf (BinaryExp op exp1 exp2) env st0 = valueOfBop op val1 val2
-  where
-    (val1, st1) = valueOf exp1  env st0
-    (val2, st2) = valueOf exp2 env st1
+--valueOf (BinaryExp op exp1 exp2) env st0 = valueOfBop op val1 val2
+--  where
+--    (val1, st1) = valueOf exp1  env st0
+--    (val2, st2) = valueOf exp2 env st1
 
 -- Don't forget about free store
 
@@ -106,7 +149,7 @@ valueOfBop op val1 val2 = case op of
 
 --valueOf :: Return -> Environment -> Store -> Answer
 --valueOf (Return exp1) env store = env2 --Added Exp 1 into the parathenses
---Answer Return exp1 env = exp1         --Attempted to add the return statement 
+--Answer Return exp1 env = exp1         --Attempted to add the return statement
 
 -- valueOf(Return exp1)env = env1 exp2
 ---------------------------------------------
