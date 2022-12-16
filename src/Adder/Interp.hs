@@ -20,7 +20,7 @@ import Adder.DataStructures (DenVal, Environment, ExpVal (..), Function (..))
 import Adder.Defs (Source)
 import Adder.Environment (Env (..))
 import Adder.Lang.Parser (ParseError, parseFile, parseInteractive)
-import Adder.Lang.Syntax (Expression (..), Program (..), Statement (..))
+import Adder.Lang.Syntax (Expression (..), Program (..), Statement (..), Atom (..))
 import Adder.Store (Store, deref, emptyStore, newref, setref)
 import Data.Either (fromRight)
 import GHC.Base (undefined)
@@ -72,6 +72,10 @@ type Answer = (ExpVal, Store)
 
 -- TODO Implement the semantics for each kind of Adder expression
 valueOf :: Expression -> Environment -> Store -> Answer
+valueOf (AtomExp (IdAtom var)) env st0 = ((deref addr st0), st0)
+  where
+    addr = applyEnv env var
+
 valueOf _ env st0 = undefined
 -- Binary Operation
 --valueOf (BinaryExp op exp1 exp2) env st0 = valueOfBop op val1 val2
