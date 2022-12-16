@@ -132,7 +132,9 @@ table =
     ],
     [Prefix (reserved "not" >> return (UnaryExpr Not))],
     [Infix (reserved "and" >> return (BinaryExpr And)) AssocLeft],
-    [Infix (reserved "or" >> return (BinaryExpr Or)) AssocLeft]
+    [Infix (reserved "or" >> return (BinaryExpr Or)) AssocLeft],
+    [infix (reserved "if" >> return (conditionalExpr if)), AssocLeft]
+
   ]
 
 -- See https://docs.python.org/3/reference/expressions.html
@@ -140,6 +142,11 @@ expression :: IParser Expression
 expression =
   buildExpressionParser table atom
     <?> "expression"
+    -- add conditionalExpr as a type of Expression - map data?
+
+conditionalExpr :: Iparser Expression -- RV: not sure how to implement a 'or_test'
+conditionalExpr = orTest [ reserved "if" or_test "else" expression]
+  --or_test  ::=  and_test | or_test "or" and_test
 
 -- assignment_expression ::=  [identifier ":="] expression
 assignmentExpr :: IParser Expression

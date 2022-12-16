@@ -75,14 +75,14 @@ type Answer = (ExpVal, Store)
 valueOf :: Expression -> Environment -> Store -> Answer
 valueOf _ env st0 = undefined
 
-{- If Expression not yet implemented in Syntax and Parser 
+If Expression not yet implemented in Syntax and Parser 
 valueOf (IfExp exp1 exp2 exp3) env st0 = valueOf exp' env st1 
   where 
     Answer q st1  = valueOf exp1 env st0 
     exp' = case q of 
       BoolVal True -> exp2
       BoolVal False -> exp3
--}
+
 
 --valueOF :: assignmentExpr ->  ??
 
