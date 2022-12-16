@@ -53,7 +53,7 @@ resultOf _ env st0 = undefined
 
 resultOf (AssignmentStmt var rhs) env st0 = return st2 -- need to have a parameter name for the Store on the left side
   where
-    (addr, st1) = valueOf rhs env st0
+    (addr, st1) = newref rhs env st0
     env1 = extendEnv addr var env-- need to provide an address that the variable is mapped to
     st2 = setref rhs addr st1  -- valueOf takes a Store parameter also
 
@@ -92,7 +92,7 @@ valueOf _ env st0 = undefined
  -- on the right side, you need to just have a pair of value and store
 valueOf (AssignmentExpr var rhs) env st0 = rhs st1
   where
-    (addr, st1) = valueOf exp1 env st0
+    (addr, st1) = newref exp1 env st0
     env1 = extendEnv var addr env -- need to provide an address that the variable is mapped to
     st2 = setref rhs addr st1 -- need to pass in a Store parameter here also
 
