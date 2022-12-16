@@ -68,13 +68,14 @@ compoundStmt :: IParser Statement
 compoundStmt =
   (choice . map try)
     -- if_stmt ::=  "if" assignment_expression ":" suite   - If statement only
-    -- WhileStmt ::= "while" assignmentExpr ":" suite
+    -- WhileStmt ::= "while" assignmentExpr ":" suite ["else" : suite]
     [ IfStmt
         <$> (reserved "if" >> assignmentExpr)
         <*> (reservedOp ":" >> suite),
       WhileStmt
         <$> (reserved "while" >> assignmentExpr)
         <*> (reservedOp ":" >> suite)
+        <*> (reserved "else" >> suite)
     ]
 
 -- See https://docs.python.org/3/reference/simple_stmts.html#grammar-token-python-grammar-simple_stmt
