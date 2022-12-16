@@ -59,17 +59,25 @@ statement =
       stmtList
     ]
 
+-- getStatements is used to return the list of Statements that are in a stmtList
+getStatements  :: Statement -> [Statement]
+getStatements  r = case r of (StmtList rs) -> rs; _ -> [r]
+
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-suite
 suite :: IParser [Statement]
-suite = undefined
+suite = block statement <|> getStatements <$> stmtList
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-compound_stmt
 compoundStmt :: IParser Statement
 compoundStmt =
   (choice . map try)
     -- if_stmt ::=  "if" assignment_expression ":" suite   - If statement only
+    -- WhileStmt ::= "while" assignmentExpr ":" suite
     [ IfStmt
         <$> (reserved "if" >> assignmentExpr)
+        <*> (reservedOp ":" >> suite),
+      WhileStmt
+        <$> (reserved "while" >> assignmentExpr)
         <*> (reservedOp ":" >> suite)
     ]
 
@@ -78,6 +86,7 @@ simpleStmt :: IParser Statement
 simpleStmt =
   (choice . map try)
     [ reserved "pass" >> return PassStmt, -- pass_stmt ::= "pass"
+      (reserved "continue" >> return ContinueStmt),
       ReturnStmt <$> (reserved "return" >> expression), -- (reserved "return" >> [Expression]) -- Attempted to make it like the IsZero expression after feedback
       -- Attempted EBNF rule return_stmt ::=  "return" [expression_list]
       AssignmentStmt
@@ -111,13 +120,17 @@ stmtList =
 table :: [[Operator String () (IndentT Identity) Expression]]
 table =
   [ [Infix (reservedOp "**" >> return (BinaryExpr Power)) AssocRight],
-    [Prefix (reservedOp "-" >> return (UnaryExpr Negative))],
+    [ Prefix (reservedOp "-" >> return (UnaryExpr Negative)),
+      Prefix (reservedOp "+" >> return (UnaryExpr Positive))
+    ],
     [ Infix (reservedOp "*" >> return (BinaryExpr Times)) AssocLeft,
       Infix (reservedOp "/" >> return (BinaryExpr Divide)) AssocLeft,
       Infix (reservedOp "//" >> return (BinaryExpr IntDiv)) AssocLeft,
       Infix (reservedOp "%" >> return (BinaryExpr Mod)) AssocLeft
     ],
     [ Infix (reservedOp "+" >> return (BinaryExpr Plus)) AssocLeft
+    ,
+     Infix (reservedOp "-" >> return (BinaryExpr Minus)) AssocLeft
     ],
     [ Infix (reservedOp "in" >> return (BinaryExpr In)) AssocLeft,
       Infix (reservedOp "not in" >> return (BinaryExpr NotIn)) AssocLeft,
@@ -158,6 +171,7 @@ atom =
     <|> IntLiteralExp <$> integer
     <|> StringLiteralExp <$> string
     <|> FloatLiteralExp <$> float
+    <|> BoolLiteralExp <$> boolean
     <?> "atom"
 
 -- (choice . map try)
