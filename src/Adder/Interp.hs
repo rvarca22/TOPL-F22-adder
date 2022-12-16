@@ -51,10 +51,10 @@ resultOfProgram _ env st0 = undefined
 resultOf :: Statement -> Environment -> Store -> IO Store
 resultOf _ env st0 = undefined
 
-resultOf (IfStmt test conseq) p st = if q then st2 
+resultOf (IfStmt test conseq) env st0 = if q then st2 
   where
-    Answer (BoolVal q) st1 = valueOf test p st
-    st2 = resultOf conseq p st1
+    (BoolVal q) st1 = valueOf test env st0
+    st2 = resultOf conseq env st1
 
 
 --resultOf (PassStmt) _ env st0 = env -- pass does not do anything so would env not cahgne?
@@ -75,12 +75,14 @@ type Answer = (ExpVal, Store)
 valueOf :: Expression -> Environment -> Store -> Answer
 valueOf _ env st0 = undefined
 
-valueOf (IfExp exp1 exp2 exp3) p st = valueOf exp' p st1 
+{- If Expression not yet implemented in Syntax and Parser 
+valueOf (IfExp exp1 exp2 exp3) env st0 = valueOf exp' env st1 
   where 
-    Answer q st1  = valueOf exp1 p st 
+    Answer q st1  = valueOf exp1 env st0 
     exp' = case q of 
       BoolVal True -> exp2
       BoolVal False -> exp3
+-}
 
 --valueOF :: assignmentExpr ->  ??
 
@@ -89,9 +91,9 @@ valueOf (IfExp exp1 exp2 exp3) p st = valueOf exp' p st1
 -- interpreter (e.g., the applyProcedure helper function).
 
 
---valueOf :: Return -> Environment -> Store -> Answer
---valueOf (Return exp1) env store = env2 --Added Exp 1 into the parathenses
---Answer Return exp1 env = exp1         --Attempted to add the return statement 
+valueOf :: Return -> Environment -> Store -> Answer
+valueOf (Return exp1) env store = env2 --Added Exp 1 into the parathenses
+Answer Return exp1 env = exp1         --Attempted to add the return statement 
 
 -- valueOf(Return exp1)env = env1 exp2
 ---------------------------------------------
