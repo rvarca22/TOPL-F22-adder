@@ -68,33 +68,33 @@ valueOf _ env st0 = undefined
 valueOfBop :: BinaryOp -> ExpVal -> ExpVal -> ExpVal
 valueOfBop op val1 val2 = case op of
   Plus -> case (val1, val2) of
-    (IntVal n1, IntVal n2) -> IntVal(n1 '+` n2)
-    (IntVal n1, FloatVal n2) -> FloatVal(n1 `+` n2)
-    (FloatVal n1, IntVal n2) -> FloatVal(n1 `+` n2)
-    (FloatVal n1, FloatVal n2) -> FloatVal(n1 `+` n2)
-    (StrVal s1, StrVal s2) -> StrVal(s1 `++` s2)
+    (IntVal n1, IntVal n2) -> IntVal(n1 + n2)
+    (IntVal n1, FloatVal n2) -> FloatVal(fromIntegral n1 + n2)
+    (FloatVal n1, IntVal n2) -> FloatVal(n1 + fromIntegral n2)
+    (FloatVal n1, FloatVal n2) -> FloatVal(n1 + n2)
+    (StrVal s1, StrVal s2) -> StrVal(s1 ++ s2)
     _ -> undefined
   Minus -> case (val1, val2) of
-    (IntVal n1, IntVal n2) -> IntVal(n1 `-` n2)
-    (IntVal n1, FloatVal n2) -> FloatVal(n1 `-` n2)
-    (FloatVal n1, IntVal n2) -> FloatVal(n1 `-` n2)
-    (FloatVal n1, FloatVal n2) -> FloatVal(n1 `-` n2)
+    (IntVal n1, IntVal n2) -> IntVal(n1 - n2)
+    (IntVal n1, FloatVal n2) -> FloatVal(fromIntegral n1 - n2)
+    (FloatVal n1, IntVal n2) -> FloatVal(n1 - fromIntegral n2)
+    (FloatVal n1, FloatVal n2) -> FloatVal(n1 - n2)
     _ -> undefined
   Times -> case (val1, val2) of
-    (IntVal n1, IntVal n2) -> IntVal(n1 `*` n2)
-    (IntVal n1, FloatVal n2) -> FloatVal(n1 `*` n2)
-    (FloatVal n1, IntVal n2) -> FloatVal(n1 `*` n2)
-    (FloatVal n1, FloatVal n2) -> FloatVal(n1 `*` n2)
+    (IntVal n1, IntVal n2) -> IntVal(n1 * n2)
+    (IntVal n1, FloatVal n2) -> FloatVal(fromIntegral n1 * n2)
+    (FloatVal n1, IntVal n2) -> FloatVal(n1 * fromIntegral n2)
+    (FloatVal n1, FloatVal n2) -> FloatVal(n1 * n2)
     _ -> undefined
   FloorDiv -> case (val1, val2) of
-    (IntVal n1, IntVal n2) -> IntVal(floor(fromIntegral n1 `//` fromIntegral n2))
-    (IntVal n1, FloatVal n2) -> IntVal(floor(fromIntegral n1 `//` n2)))
-    (FloatVal n1, IntVal n2) -> IntVal(floor(n1 `//` fromIntegral n2)))
-    (FloatVal n1, FloatVal n2) -> IntVal(floor(n1 `//` n2))
+    (IntVal n1, IntVal n2) -> IntVal(floor(fromIntegral n1 // fromIntegral n2))
+    (IntVal n1, FloatVal n2) -> IntVal(floor(fromIntegral n1 // n2))
+    (FloatVal n1, IntVal n2) -> IntVal(floor(n1 // fromIntegral n2))
+    (FloatVal n1, FloatVal n2) -> IntVal(floor(n1 // n2))
     _ -> undefined
   Power -> case (val1, val2) of
-    (IntVal n1, IntVal n2) -> IntVal(floor(fromIntegral n1 `**` fromIntegral n2))
-    (IntVal n1, FloatVal n2) -> FloatVal(floor(fromIntegral n1 `**` n2))
-    (FloatVal n1, IntVal n2) -> FloatVal(n1 `**` fromIntegral n2))
-    (FloatVal n1, FloatVal n2) -> FloatVal(n1 `**` n2)
+    (IntVal n1, IntVal n2) -> IntVal(floor(fromIntegral n1 ** fromIntegral n2))
+    (IntVal n1, FloatVal n2) -> FloatVal(floor(fromIntegral n1 ** n2))
+    (FloatVal n1, IntVal n2) -> FloatVal(n1 ** fromIntegral n2)
+    (FloatVal n1, FloatVal n2) -> FloatVal(n1 ** n2)
     _ -> undefined

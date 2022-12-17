@@ -78,6 +78,8 @@ table =
     [Infix (reservedOp "**" >> return (BinaryExpr Power)) AssocRight],
     [ Infix (reservedOp "*" >> return (BinaryExpr Times)) AssocLeft
     ],
+    [ Infix (reservedOp "//" >> return (BinaryExpr FloorDiv)) AssocLeft
+    ],
     [ Infix (reservedOp "+" >> return (BinaryExpr Plus)) AssocLeft
     ],
     [ Infix (reservedOp "<" >> return (BinaryExpr Less)) AssocLeft
