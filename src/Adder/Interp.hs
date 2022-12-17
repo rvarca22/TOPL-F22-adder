@@ -60,11 +60,11 @@ type Answer = (ExpVal, Store)
 valueOf :: Expression -> Environment -> Store -> Answer
 valueOf _ env st0 = undefined
 -- String literal
-valueOf (StringLiteralExp n) env = StrVal n
+valueOf (StringLiteralExp n) st0 = StrVal n
 -- Float literal
-valueOf (FloatLiteralExp n) _ = FloatVal n
+valueOf (FloatLiteralExp n) st0 = FloatVal n
 -- Integer literal
-valueOf (IntLiteralExp n) _ = IntVal n
+valueOf (IntLiteralExp n) st0 = IntVal n
 
 
 {- Auxiliary functions -}
