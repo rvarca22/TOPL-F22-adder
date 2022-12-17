@@ -20,7 +20,7 @@ import Adder.DataStructures (DenVal, Environment, ExpVal (..), Function (..))
 import Adder.Defs (Source)
 import Adder.Environment (Env (..))
 import Adder.Lang.Parser (ParseError, parseFile, parseInteractive)
-import Adder.Lang.Syntax (Expression (..), Program (..), Statement (..), ExpVal(..), AugOp(..), Atom (..))
+import Adder.Lang.Syntax (Expression (..), Program (..), Statement (..), BinaryOp(..), ExpVal(..), AugOp(..), Atom (..))
 import Adder.Store (Store, deref, emptyStore, newref, setref)
 import Data.Either (fromRight)
 import GHC.Base (undefined)
@@ -170,10 +170,14 @@ valueOfBop op val1 val2 = case op of
     (FloatVal n1, FloatVal n2) -> FloatVal(n1 `mod` n2)
     _ -> undefined
   Divide -> FloatVal(n1 `div` n2)
+  And -> BoolVal (x1 && x2)
+  Or -> BoolVal (x1 && x2)
   _ -> error "unimplemented binary operation"
   where
     n1 = expvalToFloat val1
     n2 = expvalToFloat val2
+    BoolVal x1 = val1
+    BoolVal x2 = val2
   --Code here
 
 --valueOf :: Return -> Environment -> Store -> Answer
