@@ -33,11 +33,12 @@ data UnaryOp
 -- TODO Build out the abstract syntax for more binary operations
 data BinaryOp
   = Plus
+  | Minus
   | Times
+  | FloorDiv
   | Power
   | Equal
   | Less
-  | Concat
   | And
   | Is
   deriving (Show)
