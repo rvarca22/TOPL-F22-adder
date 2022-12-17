@@ -70,11 +70,7 @@ type Answer = (ExpVal, Store)
 
 {- semantic reductions for expressions -}
 
--- TODO Implement the semantics for each kind of Adder expression
-valueOfBop :: BinaryOp -> ExpVal -> ExpVal -> ExpVal
-valueOfBop op val1 val2 = case op of
-  _ -> error "unimplemented binary operation"
-  --Code here
+
 
 -- Binary Operation
 -- Don't forget about free store
@@ -90,6 +86,13 @@ valueOf _ env st0 = undefined
 --valueOF :: assignmentExpr ->  ??
 
 {- Auxiliary functions -}
+
+-- TODO Implement the semantics for each kind of Adder expression
+valueOfBop :: BinaryOp -> ExpVal -> ExpVal -> ExpVal
+valueOfBop op val1 val2 = case op of
+  _ -> error "unimplemented binary operation"
+  --Code here
+  
 -- TODO Implement any helper functions needed to simplify the design of the
 -- interpreter (e.g., the applyProcedure helper function).
 

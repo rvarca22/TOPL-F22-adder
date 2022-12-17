@@ -164,8 +164,8 @@ assignmentExpr = expression -- For now, assignment expression only needs to be a
 -- See https://docs.python.org/3/reference/expressions.html#grammar-token-python-grammar-atom
 atom :: IParser Expression
 atom =
-  AtomExp . try IdAtom <$> identifier
-    <|> FloatLiteralExp <$> float
+  AtomExp . IdAtom <$> identifier
+    <|> try (FloatLiteralExp <$> float)
     <|> IntLiteralExp <$> integer
     <|> StringLiteralExp <$> string
     <|> BoolLiteralExp <$> boolean
