@@ -67,6 +67,7 @@ data BinaryOp
   | NotIn
   | Is
   | IsNot
+  | FloorDiv
   | Less
   | LessEqual
   | Greater

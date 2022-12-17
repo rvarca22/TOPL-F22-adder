@@ -145,6 +145,8 @@ table =
       Infix (reservedOp "//" >> return (BinaryExpr IntDiv)) AssocLeft,
       Infix (reservedOp "%" >> return (BinaryExpr Mod)) AssocLeft
     ],
+    [ Infix (reservedOp "//" >> return (BinaryExpr FloorDiv)) AssocLeft
+    ],
     [ Infix (reservedOp "+" >> return (BinaryExpr Plus)) AssocLeft
     ,
      Infix (reservedOp "-" >> return (BinaryExpr Minus)) AssocLeft
