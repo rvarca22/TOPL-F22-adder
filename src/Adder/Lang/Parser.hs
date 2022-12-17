@@ -76,6 +76,23 @@ compoundStmt =
     [ IfStmt
         <$> (reserved "if" >> assignmentExpr)
         <*> (reservedOp ":" >> suite),
+      IfElseStmt
+        <$> (reserved "if" >> assignmentExpr)
+        <*> (reservedOp ":" >> suite)
+        <*> (reserved "else")
+        <*> (reservedOp ":" >> suite),
+      IfElifStmt
+        <$> (reserved "if" >> assignmentExpr)
+        <*> (reservedOp ":" >> suite)
+        <*> (reserved "elif" >> assignmentExpr)
+        <*> (reservedOp ":" >> suite),
+      IfElifElseStmt
+        <$> (reserved "if" >> assignmentExpr)
+        <*> (reservedOp ":" >> suite)
+        <*> (reserved "elif" >> assignmentExpr)
+        <*> (reservedOp ":" >> suite)
+        <*> (reserved "else")
+        <*> (reservedOp ":" >> suite),
       WhileStmt
         <$> (reserved "while" >> assignmentExpr)
         <*> (reservedOp ":" >> suite)
@@ -160,6 +177,9 @@ assignmentExpr = expression -- For now, assignment expression only needs to be a
 -- (choice . map try)
 --  [<$> identifier
 --    <*> (reservedOp "=" >> Expression)]
+
+varExpr :: IParser Expression
+varExpr = expression
 
 -- See https://docs.python.org/3/reference/expressions.html#grammar-token-python-grammar-atom
 atom :: IParser Expression

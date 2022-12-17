@@ -42,6 +42,8 @@ adderLexSpec =
           "pass",
           "return",
           "if",
+          "elif",
+          "else",
           "or",
           "and",
           "is",
