@@ -51,14 +51,16 @@ resultOfProgram _ env st0 = undefined
 resultOf :: Statement -> Environment -> Store -> IO Store
 resultOf _ env st0 = undefined
 
-resultOf (WhileStmt test bodyStmts) p st0 = 
+resultOf (WhileStmt test bodyStmts altern) p st0 = 
   if q
     then do 
-      st2 <- resultOf bodyStmts p st1
-      resultOf (WhileStmt test bodyStmts) p st2
+      st2 <- resultOfStmts bodyStmts p st1
+      resultOf (WhileStmt test bodyStmts altern) p st2
     else return st1
+    return st3    
   where
     (BoolVal q, st1) = valueOf test p st0
+    st3 = resultOfStmts altern p st1
 
 --resultOf (PassStmt) _ env st0 = env -- pass does not do anything so would env not cahgne?
 -- where
