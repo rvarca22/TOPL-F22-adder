@@ -42,6 +42,8 @@ adderLexSpec =
           "pass",
           "return",
           "if",
+          "elif",
+          "else",
           "or",
           "and",
           "is",
@@ -50,7 +52,8 @@ adderLexSpec =
           "not in",
           "is not",
           "while",
-          "else"
+          "False",
+          "True"
         ],
       -- TODO Define the reserved operator symbols for the Adder language
       -- See https://docs.python.org/3/reference/lexical_analysis.html#operators

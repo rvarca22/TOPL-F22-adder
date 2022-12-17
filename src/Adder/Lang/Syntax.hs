@@ -18,7 +18,10 @@ newtype Program
 
 -- TODO Build out the abstract syntax for Adder statements
 data Statement
-  = IfStmt Expression [Statement] -- If Statement contains Exprression and list of statements - at this time only one statement
+  = IfStmt Expression [Statement]
+  | IfElseStmt Expression [Statement] [Statement]
+  | IfElifStmt Expression [Statement] [Statement]
+  | IfElifElseStmt Expression [Statement] [Statement] [Statement]
   | ReturnStmt Expression -- I did this to return just an expression of any kind, so the user could use return for many purposes
   | PassStmt
   | StmtList [Statement]
@@ -37,6 +40,7 @@ data Expression
   | IntLiteralExp Integer
   | StringLiteralExp String
   | FloatLiteralExp Float
+  | BoolLiteralExp Bool
   deriving (Show)
 
 -- Bashir's Augment assignment operations
@@ -63,6 +67,7 @@ data BinaryOp
   | NotIn
   | Is
   | IsNot
+  | FloorDiv
   | Less
   | LessEqual
   | Greater
@@ -91,8 +96,15 @@ data Atom
   --Will need Enclosure
 
 -- TODO Implement "to-string" functionality for new Adder expressed values
-instance Show ExpVal where
+instance Show ExpVal where 
+  show (FloatVal p) = show p
   show (BoolVal p) = show p
   show (IntVal p) = show p
-  show (FloatVal p) = show p
   show (StrVal p) = show p
+
+expvalToFloat :: ExpVal -> Float
+expvalToFloat val -> case val of
+  IntVal val -> fromInteger val :: Float
+  FloatVal val -> val
+  StrVal val -> "This value cannot be converted to a float"
+  BoolVal val -> "This value cannot be converted to a float"

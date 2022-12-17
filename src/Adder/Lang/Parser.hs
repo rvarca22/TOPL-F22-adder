@@ -59,9 +59,13 @@ statement =
       stmtList
     ]
 
+-- getStatements is used to return the list of Statements that are in a stmtList
+getStatements  :: Statement -> [Statement]
+getStatements  r = case r of (StmtList rs) -> rs; _ -> [r]
+
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-suite
 suite :: IParser [Statement]
-suite = undefined
+suite = block statement <|> getStatements <$> stmtList
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-compound_stmt
 compoundStmt :: IParser Statement
@@ -71,6 +75,23 @@ compoundStmt =
     -- WhileStmt ::= "while" assignmentExpr ":" suite ["else" : suite]
     [ IfStmt
         <$> (reserved "if" >> assignmentExpr)
+        <*> (reservedOp ":" >> suite),
+      IfElseStmt
+        <$> (reserved "if" >> assignmentExpr)
+        <*> (reservedOp ":" >> suite)
+        <*> (reserved "else")
+        <*> (reservedOp ":" >> suite),
+      IfElifStmt
+        <$> (reserved "if" >> assignmentExpr)
+        <*> (reservedOp ":" >> suite)
+        <*> (reserved "elif" >> assignmentExpr)
+        <*> (reservedOp ":" >> suite),
+      IfElifElseStmt
+        <$> (reserved "if" >> assignmentExpr)
+        <*> (reservedOp ":" >> suite)
+        <*> (reserved "elif" >> assignmentExpr)
+        <*> (reservedOp ":" >> suite)
+        <*> (reserved "else")
         <*> (reservedOp ":" >> suite),
       WhileStmt
         <$> (reserved "while" >> assignmentExpr)
@@ -125,6 +146,8 @@ table =
       Infix (reservedOp "//" >> return (BinaryExpr IntDiv)) AssocLeft,
       Infix (reservedOp "%" >> return (BinaryExpr Mod)) AssocLeft
     ],
+    [ Infix (reservedOp "//" >> return (BinaryExpr FloorDiv)) AssocLeft
+    ],
     [ Infix (reservedOp "+" >> return (BinaryExpr Plus)) AssocLeft
     ,
      Infix (reservedOp "-" >> return (BinaryExpr Minus)) AssocLeft
@@ -158,14 +181,19 @@ assignmentExpr = expression -- For now, assignment expression only needs to be a
 --  [<$> identifier
 --    <*> (reservedOp "=" >> Expression)]
 
+varExpr :: IParser Expression
+varExpr = expression
+
 -- See https://docs.python.org/3/reference/expressions.html#grammar-token-python-grammar-atom
 atom :: IParser Expression
 atom =
   AtomExp . IdAtom <$> identifier
+    <|> try (FloatLiteralExp <$> float)
     <|> IntLiteralExp <$> integer
     <|> StringLiteralExp <$> string
-    <|> FloatLiteralExp <$> float
+    <|> BoolLiteralExp <$> boolean
     <?> "atom"
+    
 
 -- (choice . map try)
 -- [
