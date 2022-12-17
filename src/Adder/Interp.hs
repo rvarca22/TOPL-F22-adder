@@ -22,6 +22,7 @@ import Adder.Environment (Env (..))
 import Adder.Lang.Parser (ParseError, parseFile, parseInteractive)
 import Adder.Lang.Syntax (Expression (..), Program (..), Statement (..))
 import Adder.Store (Store, deref, emptyStore, newref, setref)
+import Adder.Lang.Syntax (Expression (..), Program (..), Statement (..), ExpVal(..))
 import Data.Either (fromRight)
 import Prelude hiding (exp)
 
