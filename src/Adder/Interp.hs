@@ -97,13 +97,43 @@ resultOf (AugmentedAssignmentStmt var AugDiv rhs) env st0 = return st2
     st2 = setref address1 rval3 st1
 resultOf _ env st0 = undefined
 
-{-
-resultOf (IfStmt test conseq) p st = if q then st2 else st3
+resultOfStmts :: [Statement] -> Environment -> Store -> IO Store
+resultOfStmts [] p st1 = return st1
+resultOfStmts (stmt : stmts) p st1 = do
+  st2 <- resultOf stmt p st1
+  resultOfStmts stmts p st2
+
+
+resultOf (IfStmt exp1 stmt1) p st0 = if q then st2 else st0
   where
-    Answer (BoolVal q) st1 = valueOf test p st
-    st2 = resultOf conseq p st1
-    st3 = resultOf conseq p st2
--}
+    (BoolVal q, st1) = valueOf exp1 p st0
+    st2 = resultOfStmts stmt1 p st1
+
+
+
+resultOf (IfElseStmt exp1 trueStmts falseStmts) p st0 = if q then st2 else st3
+  where
+    (BoolVal q, st1) = valueOf exp1 p st0
+    st2 = resultOfStmts trueStmts p st1
+    st3 = resultOfStmts falseStmts p st1
+
+
+resultOf (IfElifStmt exp1 stmt1 exp2 stmt2) p st0 = if q1 then st2 else if q2 then st4 else st0
+  where
+    (BoolVal q1, st1) = valueOf exp1 p st0
+    st2 = resultOfStmts stmt1 p st1
+    (BoolVal q2, st3) = valueOf exp2 p st0
+    st4 = resultOfStmts p st3
+
+
+resultOf (IfElifElseStmt exp1 stmt1 exp2 stmt2 stmt3) p st0 = if q1 then st2 else if q2 then st4 else st5
+  where
+    (BoolVal q1, st1) = valueOf exp1 p st0
+    st2 = resultOfStmts stmt1 p st1
+    (BoolVal q2, st3) = valueOf exp2 p st0
+    st4 = resultOfStmts stmt2 p st3
+    st5 = resultOfStmts stmt3 p st3
+
 
 {- Evaluating a program yields an "answer" - a value and a resulting state. -}
 type Answer = (ExpVal, Store)
@@ -116,7 +146,6 @@ valueOf :: Expression -> Environment -> Store -> Answer
 valueOf (AtomExp (IdAtom var)) env st0 = ((deref addr st0), st0)
   where
     addr = applyEnv env var
-
 valueOf _ env st0 = undefined
 -- Binary Operation
 --valueOf (BinaryExp op exp1 exp2) env st0 = valueOfBop op val1 val2
