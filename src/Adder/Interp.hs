@@ -73,9 +73,9 @@ type Answer = (ExpVal, Store)
 
 -- TODO Implement the semantics for each kind of Adder expression
 valueOf :: Expression -> Environment -> Store -> Answer
-valueOf (UnaryExpr op exp) env st0 = do   -- Helper function to check each unary op, and return
+valueOf (UnaryExpr op exp) env st0    -- Helper function to check each unary op, and return
   let (expVal, st1) = valueOf exp env st0 -- correct values
-  return (valueOfUop op expVal, st1)
+  in (valueOfUop op expVal, st1)
 
 
 --valueOF :: assignmentExpr ->  ??
@@ -103,14 +103,14 @@ valueOf (UnaryExpr op exp) env st0 = do   -- Helper function to check each unary
 --   2.  abs x, where x < 0  -->  -x
 --   3.  abs 0                -->  0
 
-valueOfUop :: UnaryOp -> Expression -> Environment -> ExpVal
-valueOfUop op exp st0 = case op of
-  Negative -> case valueOf exp st0 of
+valueOfUop :: UnaryOp -> ExpVal -> ExpVal
+valueOfUop op val = case op of
+  Negative -> case valueOf exp  of
     IntVal n -> IntVal (negate n)
     BoolVal b -> error "Invalid operand for unary operator '-'"
-  Positive -> case valueOf exp st0 of
+  Positive -> case valueOf exp  of
     IntVal n -> IntVal n
     BoolVal b -> error "Invalid operand for unary operator '+'"
-  Not -> case valueOf exp st0 of
+  Not -> case val  of
     IntVal n -> error "Invalid operand for unary operator 'not'"
     BoolVal b -> BoolVal (not b)

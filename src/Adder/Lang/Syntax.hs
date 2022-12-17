@@ -45,9 +45,6 @@ data UnaryOp
   = Not
   | Negative
   | Positive
-  | BoolVal
-  | IntVal
-  |
   deriving (Show)
 
 -- TODO Build out the abstract syntax for more binary operations
