@@ -38,9 +38,9 @@ adderLexSpec =
       -- TODO Define the reserved operator symbols for the Adder language
       -- See https://docs.python.org/3/reference/lexical_analysis.html#operators
       Tok.opStart = Tok.opLetter adderLexSpec,
-      Tok.opLetter = oneOf "+-*/%@<>&|^~:=!.",
+      Tok.opLetter = oneOf "+,-,*,//,**",
       Tok.reservedOpNames =
-        ["Add","Concat"]
+        ["Plus","Minus","Times","FloorDiv","Power"]
     }
 
 boolean :: IParser Bool
