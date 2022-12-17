@@ -71,23 +71,27 @@ type Answer = (ExpVal, Store)
 {- semantic reductions for expressions -}
 
 -- TODO Implement the semantics for each kind of Adder expression
-valueOfBop :: BinaryOp -> ExpVal -> ExpVal -> (ExpVal, Store)
+valueOfBop :: BinaryOp -> ExpVal -> ExpVal -> ExpVal
 valueOfBop op val1 val2 = case op of
-  _ -> (val1, emptyStore)
   _ -> error "unimplemented binary operation"
   --Code here
 
+-- Binary Operation
+-- Don't forget about free store
+
 valueOf :: Expression -> Environment -> Store -> Answer
-valueOf (BinaryExpr op exp1 exp2) env st0 = valueOfBop op val1 val2
+valueOf (BinaryExpr op exp1 exp2) env st0 = (valueOfBop op val1 val2, st2)
   where
     (val1, st1) = valueOf exp1 env st0
     (val2, st2) = valueOf exp2 env st1
 valueOf _ env st0 = undefined
 
--- Binary Operation
--- Don't forget about free store
 
+--valueOF :: assignmentExpr ->  ??
 
+{- Auxiliary functions -}
+-- TODO Implement any helper functions needed to simplify the design of the
+-- interpreter (e.g., the applyProcedure helper function).
 
 --valueOf :: Return -> Environment -> Store -> Answer
 --valueOf (Return exp1) env store = env2 --Added Exp 1 into the parathenses
