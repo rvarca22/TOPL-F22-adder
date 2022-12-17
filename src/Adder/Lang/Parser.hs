@@ -187,11 +187,12 @@ varExpr = expression
 atom :: IParser Expression
 atom =
   AtomExp . IdAtom <$> identifier
+    <|> try (FloatLiteralExp <$> float)
     <|> IntLiteralExp <$> integer
     <|> StringLiteralExp <$> string
-    <|> FloatLiteralExp <$> float
     <|> BoolLiteralExp <$> boolean
     <?> "atom"
+    
 
 -- (choice . map try)
 -- [
