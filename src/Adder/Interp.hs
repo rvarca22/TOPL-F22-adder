@@ -25,7 +25,6 @@ import Adder.Store (Store, deref, emptyStore, newref, setref)
 import Data.Either (fromRight)
 import GHC.Base (undefined)
 import Prelude hiding (exp)
-import Adder.Lang.Syntax(BinaryOp (Plus, Minus, Times, FloorDiv, Power))
 
 type Interpreter a = a -> Environment -> Store -> IO Store
 
@@ -63,7 +62,6 @@ resultOf (AugmentedAssignmentStmt var AugPlus rhs) env st0 = return st2
     (IntVal (rval2), st1) = valueOf rhs env st0
     rval3 = IntVal ( rval1 +  rval2)
     st2 = setref address1 rval3 st1
-
 --resultOf (AugmentedAssignmentStmt var AugPlus rhs) env st0 = return st2
 --  where
 --    address1 = applyEnv env var
@@ -72,7 +70,6 @@ resultOf (AugmentedAssignmentStmt var AugPlus rhs) env st0 = return st2
 --    rval3 = case (rval1, rval2) of
 --        (Intval n1, IntVal n2) -> IntVal (n1 + n2)
 --    st2 = setref address1 rval3 st1
-
 resultOf (AugmentedAssignmentStmt var AugMinus rhs) env st0 = return st2
   where
     address1 = applyEnv env var
@@ -80,7 +77,6 @@ resultOf (AugmentedAssignmentStmt var AugMinus rhs) env st0 = return st2
     (IntVal (rval2), st1) = valueOf rhs env st0
     rval3 = IntVal ( rval1 -  rval2)
     st2 = setref address1 rval3 st1
-
 resultOf (AugmentedAssignmentStmt var AugMulti rhs) env st0 = return st2
   where
     address1 = applyEnv env var
@@ -88,7 +84,6 @@ resultOf (AugmentedAssignmentStmt var AugMulti rhs) env st0 = return st2
     (IntVal (rval2), st1) = valueOf rhs env st0
     rval3 = IntVal ( rval1 *  rval2)
     st2 = setref address1 rval3 st1
-
 resultOf (AugmentedAssignmentStmt var AugDiv rhs) env st0 = return st2
   where
     address1 = applyEnv env var
@@ -96,37 +91,31 @@ resultOf (AugmentedAssignmentStmt var AugDiv rhs) env st0 = return st2
     (IntVal (rval2), st1) = valueOf rhs env st0
     rval3 = IntVal (div rval1 rval2) -- floor and frominteger
     st2 = setref address1 rval3 st1
-resultOf _ env st0 = undefined
-
-resultOfStmts :: [Statement] -> Environment -> Store -> IO Store
-resultOfStmts [] p st1 = return st1
-resultOfStmts (stmt : stmts) p st1 = do
-  st2 <- resultOf stmt p st1
-  resultOfStmts stmts p st2
-
-
+resultOf (WhileStmt test bodyStmts altern) p st0 = 
+  if q
+    then do 
+      st2 <- resultOfStmts bodyStmts p st1
+      resultOf (WhileStmt test bodyStmts altern) p st2
+    else return st1
+    return st3    
+  where
+    (BoolVal q, st1) = valueOf test p st0
+    st3 = resultOfStmts altern p st1
 resultOf (IfStmt exp1 stmt1) p st0 = if q then st2 else st0
   where
     (BoolVal q, st1) = valueOf exp1 p st0
     st2 = resultOfStmts stmt1 p st1
-
-
-
 resultOf (IfElseStmt exp1 trueStmts falseStmts) p st0 = if q then st2 else st3
   where
     (BoolVal q, st1) = valueOf exp1 p st0
     st2 = resultOfStmts trueStmts p st1
     st3 = resultOfStmts falseStmts p st1
-
-
 resultOf (IfElifStmt exp1 stmt1 exp2 stmt2) p st0 = if q1 then st2 else if q2 then st4 else st0
   where
     (BoolVal q1, st1) = valueOf exp1 p st0
     st2 = resultOfStmts stmt1 p st1
     (BoolVal q2, st3) = valueOf exp2 p st0
     st4 = resultOfStmts p st3
-
-
 resultOf (IfElifElseStmt exp1 stmt1 exp2 stmt2 stmt3) p st0 = if q1 then st2 else if q2 then st4 else st5
   where
     (BoolVal q1, st1) = valueOf exp1 p st0
@@ -134,7 +123,7 @@ resultOf (IfElifElseStmt exp1 stmt1 exp2 stmt2 stmt3) p st0 = if q1 then st2 els
     (BoolVal q2, st3) = valueOf exp2 p st0
     st4 = resultOfStmts stmt2 p st3
     st5 = resultOfStmts stmt3 p st3
-
+resultOf _ env st0 = undefined
 
 {- Evaluating a program yields an "answer" - a value and a resulting state. -}
 type Answer = (ExpVal, Store)
@@ -155,6 +144,12 @@ valueOf _ env st0 = undefined
 --valueOF :: assignmentExpr ->  ??
 
 {- Auxiliary functions -}
+
+resultOfStmts :: [Statement] -> Environment -> Store -> IO Store
+resultOfStmts [] p st1 = return st1
+resultOfStmts (stmt : stmts) p st1 = do
+  st2 <- resultOf stmt p st1
+  resultOfStmts stmts p st2
 
 -- TODO Implement the semantics for each kind of Adder expression
 valueOfBop :: BinaryOp -> ExpVal -> ExpVal -> ExpVal

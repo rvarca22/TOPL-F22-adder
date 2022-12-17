@@ -29,7 +29,7 @@ data Statement
   | AugmentedAssignmentStmt Identifier AugOp Expression -- Bashir's Augmented Assignment constructor
   | BreakStmt
   | ContinueStmt
-  | WhileStmt Expression [Statement]
+  | WhileStmt Expression [Statement] [Statement]
   deriving (Show)
 
 -- TODO Build out the abstract syntax for Adder by adding more expressions
