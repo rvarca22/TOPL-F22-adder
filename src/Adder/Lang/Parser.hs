@@ -101,15 +101,3 @@ atom :: IParser Expression
 atom =
   undefined
     <?> "atom"
-
--- Implementation of numeric and concatination addition
--- EBNF form: plus := +
---            concat := +
-
-
-operator :: IParser BinaryOp
-operator = 
-  (choice . map try)
-  [ Plus <$ reservedOp "+",
-    Concat <$ reservedOp "+"
-  ]
