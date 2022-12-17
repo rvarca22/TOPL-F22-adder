@@ -60,8 +60,8 @@ statement =
     ]
 
 -- getStatements is used to return the list of Statements that are in a stmtList
-getStatements  :: Statement -> [Statement]
-getStatements  r = case r of (StmtList rs) -> rs; _ -> [r]
+getStatements :: Statement -> [Statement]
+getStatements r = case r of (StmtList rs) -> rs; _ -> [r]
 
 -- See https://docs.python.org/3/reference/compound_stmts.html#grammar-token-python-grammar-suite
 suite :: IParser [Statement]
@@ -79,8 +79,7 @@ compoundStmt =
       IfElseStmt
         <$> (reserved "if" >> assignmentExpr)
         <*> (reservedOp ":" >> suite)
-        <*> (reserved "else")
-        <*> (reservedOp ":" >> suite),
+        <*> (reserved "else" >> reservedOp ":" >> suite),
       IfElifStmt
         <$> (reserved "if" >> assignmentExpr)
         <*> (reservedOp ":" >> suite)
@@ -91,8 +90,7 @@ compoundStmt =
         <*> (reservedOp ":" >> suite)
         <*> (reserved "elif" >> assignmentExpr)
         <*> (reservedOp ":" >> suite)
-        <*> (reserved "else")
-        <*> (reservedOp ":" >> suite),
+        <*> (reserved "else" >> reservedOp ":" >> suite),
       WhileStmt
         <$> (reserved "while" >> assignmentExpr)
         <*> (reservedOp ":" >> suite)
@@ -148,9 +146,8 @@ table =
     ],
     [ Infix (reservedOp "//" >> return (BinaryExpr FloorDiv)) AssocLeft
     ],
-    [ Infix (reservedOp "+" >> return (BinaryExpr Plus)) AssocLeft
-    ,
-     Infix (reservedOp "-" >> return (BinaryExpr Minus)) AssocLeft
+    [ Infix (reservedOp "+" >> return (BinaryExpr Plus)) AssocLeft,
+      Infix (reservedOp "-" >> return (BinaryExpr Minus)) AssocLeft
     ],
     [ Infix (reservedOp "in" >> return (BinaryExpr In)) AssocLeft,
       Infix (reservedOp "not in" >> return (BinaryExpr NotIn)) AssocLeft,
@@ -193,7 +190,6 @@ atom =
     <|> StringLiteralExp <$> string
     <|> BoolLiteralExp <$> boolean
     <?> "atom"
-    
 
 -- (choice . map try)
 -- [
