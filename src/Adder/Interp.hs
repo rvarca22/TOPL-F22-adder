@@ -20,10 +20,10 @@ import Adder.DataStructures (DenVal, Environment, ExpVal (..), Function (..))
 import Adder.Defs (Source)
 import Adder.Environment (Env (..))
 import Adder.Lang.Parser (ParseError, parseFile, parseInteractive)
-import Adder.Lang.Syntax (Expression (..), Program (..), Statement (..))
+import Adder.Lang.Syntax (Expression (..), Program (..), Statement (..), UnaryOp (..), ExpVal (..))
 import Adder.Store (Store, deref, emptyStore, newref, setref)
 import Data.Either (fromRight)
-import Prelude hiding (exp)
+-- import Prelude hiding (exp)
 
 type Interpreter a = a -> Environment -> Store -> IO Store
 
@@ -73,7 +73,7 @@ type Answer = (ExpVal, Store)
 
 -- TODO Implement the semantics for each kind of Adder expression
 valueOf :: Expression -> Environment -> Store -> Answer
-valueOf (UnaryExpr op exp) env st0    -- Helper function to check each unary op, and return
+valueOf (UnaryExpr op exp) env st0 =    -- Helper function to check each unary op, and return
   let (expVal, st1) = valueOf exp env st0 -- correct values
   in (valueOfUop op expVal, st1)
 
@@ -105,10 +105,10 @@ valueOf (UnaryExpr op exp) env st0    -- Helper function to check each unary op,
 
 valueOfUop :: UnaryOp -> ExpVal -> ExpVal
 valueOfUop op val = case op of
-  Negative -> case valueOf exp  of
+  Negative -> case valueOf val  of
     IntVal n -> IntVal (negate n)
     BoolVal b -> error "Invalid operand for unary operator '-'"
-  Positive -> case valueOf exp  of
+  Positive -> case valueOf val  of
     IntVal n -> IntVal n
     BoolVal b -> error "Invalid operand for unary operator '+'"
   Not -> case val  of

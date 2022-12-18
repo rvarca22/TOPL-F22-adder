@@ -22,8 +22,7 @@ import Text.Parsec hiding (parse, string)
 import Text.Parsec.Expr
 import Text.Parsec.Indent
 
--- Data type for boolean expressions
-data BoolExpr = TrueExp | FalseExp
+
 
 parseFile :: String -> Either ParseError Program
 parseFile = parse (contents program) "<stdin>"
