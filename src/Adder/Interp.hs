@@ -59,6 +59,15 @@ type Answer = (ExpVal, Store)
 -- TODO Implement the semantics for each kind of Adder expression
 valueOf :: Expression -> Environment -> Store -> Answer
 valueOf _ env st0 = undefined
+valueOf (OrExp exp1 exp2) env st0 = BoolVal (q1 || q2)
+  where
+    q1 = valueOf exp1 env st0
+    q2 = valueOf exp2 env st0
+valueOF (AndExp exp1 exp2) env st0 = BoolVal (q1 && q2)
+  where
+    q1 = valueOf exp1 env st0
+    q2 = valueOf exp2 env st0
+
 
 {- Auxiliary functions -}
 -- TODO Implement any helper functions needed to simplify the design of the
