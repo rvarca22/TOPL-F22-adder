@@ -3,4 +3,4 @@ Adder is a small but usable subset of the Python language writen in Haskell. It 
 
 
 My Contribution:                                                                                                                                                         
-  Adding to the interpreter, syntax, and parser files to support an IfStmt (If Statement) and IfExp (If Expression). 
+         Adding to the interpreter, syntax, and parser files to support an IfStmt (If Statement) and IfExp (If Expression). 
